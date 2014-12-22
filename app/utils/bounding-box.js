@@ -1,6 +1,8 @@
 define([
 	"utils/range"
 ],function(Range) {
+	"use strict";
+	
 	function updateRanges(boundingBox) {
 		var pos = boundingBox.position;
 		
@@ -31,7 +33,7 @@ define([
 		return updateRanges(this);
 	};
 	
-	BoundingBox.prototype.setHeight = function(Height) {
+	BoundingBox.prototype.setHeight = function(height) {
 		this.height = height;
 		
 		return updateRanges(this);
@@ -42,15 +44,9 @@ define([
 	 * 
  	 * @param {BoundingBox} other
 	 * @return bool
-	 * @see http://gamedev.stackexchange.com/a/587/54196
 	 */
 	BoundingBox.prototype.isColliding = function(other) {
 		return this.rangeX.intersects(other.rangeX) && this.rangeY.intersects(other.rangeY);
-		
-		
-		// Are the centers of the two boxes close enough on both axes to have their edges touch or intersect?
-		return (Math.abs(this.position.x - other.position.x) * 2 <= (this.width + other.width))
-         	&& (Math.abs(this.position.y - other.position.y) * 2 <= (this.height + other.height));
 	};
 	
 	BoundingBox.prototype.toString = function() {

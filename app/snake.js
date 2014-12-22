@@ -12,6 +12,8 @@ require([
 	"game-objects/snake", 
 	"game-objects/apple"
 ], function(_, Config, Snake, Apple) {
+	"use strict";
+	
 	// Get canvas reference
 	var canvas = document.getElementsByTagName("canvas")[0],
 		ctx = canvas.getContext("2d");

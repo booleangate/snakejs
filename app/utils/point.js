@@ -2,6 +2,8 @@
  * A simple Cartesian coordinate point.
  */
 define(function() {
+	"use strict";
+	
 	/**
 	 * 
 	 * @param {Number} x The x coordinate. Optional; default 0.

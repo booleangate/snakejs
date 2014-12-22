@@ -1,4 +1,6 @@
 define(function() {
+	"use strict";
+	
 	function Range(min, max) {
 		this.update(min, max);
 	}

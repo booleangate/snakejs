@@ -1,4 +1,6 @@
 define(["utils/range"], function(Range) {
+	"use strict";
+	
 	describe("Range encaspulates a set of numbers with a minimum and maximum", function() {
 		it("Should accept a min and max in the constructor", function() {
 			var r = new Range(1, 2);

@@ -2,6 +2,8 @@
  * Unit movement speed in x and y directions.
  */
 define(function() {
+	"use strict";
+	
 	/**
 	 * Velocity for X and Y axes.
 	 * 
@@ -47,8 +49,8 @@ define(function() {
  	 * @param {Number} percent Percentage as a decimal (where 1 = 100%).
 	 */	
 	Velocity.prototype.modify = function(percent) {
-		this.x += this.x * normalizePercentage(percent);
-		this.y += this.x * normalizePercentage(percent);
+		this.x += this.x * percent;
+		this.y += this.x * percent;
 		
 		return this;
 	};

@@ -3,6 +3,8 @@ define([
 	"utils/velocity",
 	"utils/bounding-box"
 ], function(Position, Velocity, BoundingBox) {
+	"use strict";
+	
 	function getClassName(instance) {
 		return instance.__proto__.constructor.toString().match(/\w+ (\w+)/)[1];
 	}

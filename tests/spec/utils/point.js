@@ -1,4 +1,6 @@
 define(["utils/point"], function(Point) {
+	"use strict";
+	
 	describe("Point contains (x,y) coordinates for a Cartesian system.", function() {
 		it("Should accept two numbers in the constructor", function() {
 			var p = new Point(1, 2);

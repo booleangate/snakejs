@@ -6,5 +6,6 @@ define([
 	"utils/velocity",
 	"utils/bounding-box"
 ], function(Head, Body, GameObject, Position, Velocity, BoundingBox) {
+	"use strict";
 
 });

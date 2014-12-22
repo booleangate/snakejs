@@ -1,4 +1,6 @@
 define(["utils/velocity"], function(Velocity) {
+	"use strict";
+	
 	describe("Velocity contains speeds for x and y axes.", function() {
 		it("Should accept two numbers in the constructor", function() {
 			var v = new Velocity(1, 2);

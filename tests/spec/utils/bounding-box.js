@@ -2,6 +2,8 @@ define([
 	"utils/bounding-box",
 	"utils/point"
 ], function(BoundingBox, Point) {
+	"use strict";
+	
 	describe("BoundingBox is for detecting game object collions", function() {
 		it("Should accept a Point, width and height in the constructor", function() {
 			var point = new Point(10, 10),
