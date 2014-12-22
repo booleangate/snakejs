@@ -6,5 +6,9 @@ define([
 ], function(GameObject, Position, Velocity, BoundingBox) {
 	"use strict";
 	
-
+	function Head() {
+		
+	}
+	
+	return Head;
 });

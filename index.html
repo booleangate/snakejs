@@ -13,15 +13,12 @@
 			width: 90%;
 			height: 90%;
 			margin: 10px auto;
-			display: block;
+			display: none;
 			border: 1px solid white;
-			
 		}
 	</style>
 </head>
 <body>
-	<h1>Snake!</h1>
-	
 	<canvas></canvas>
 	
 	<ul>
@@ -29,6 +26,7 @@
 		<li>Click anywhere on the game to restart.</li>
 	</ul>
 	
+	<script src="require-config.js"></script>
 	<script src="vendor/requirejs/require.js" data-main="app/snake"></script>
 </body>
 </html>

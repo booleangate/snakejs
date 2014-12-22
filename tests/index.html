@@ -5,28 +5,22 @@
 
 		<link rel="stylesheet" type="text/css" href="../vendor/jasmine/lib/jasmine-core/jasmine.css" />
 		
-		<script type="text/javascript" src="../vendor/jasmine/lib/jasmine-core/jasmine.js"></script>
-		<script type="text/javascript" src="../vendor/jasmine/lib/jasmine-core/jasmine-html.js"></script>
-		<script type="text/javascript" src="../vendor/jasmine/lib/jasmine-core/boot.js"></script>
-		<script type="text/javascript">
-			var require = {
-				paths: {
-					domReady: "../vendor/domReady/domReady",
-					"game-objects": "../app/game-objects",
-					utils: "../app/utils",
-				}
-			};
-		</script>
+		<script src="../vendor/jasmine/lib/jasmine-core/jasmine.js"></script>
+		<script src="../vendor/jasmine/lib/jasmine-core/jasmine-html.js"></script>
+		<script src="../vendor/jasmine/lib/jasmine-core/boot.js"></script>
+		<script src="../require-config.js"></script>
 		<script src="../vendor/requirejs/require.js"></script>
-		<script type="text/javascript">
+		<script>
 			require([
-                "domReady!",
+                "jquery",
 				"spec/utils/bounding-box",
 				"spec/utils/point",
 				"spec/utils/range",
 				"spec/utils/velocity"
-			], function() {
-				jasmine.getEnv().execute();
+			], function($) {
+				$(function() {
+					jasmine.getEnv().execute();
+				});
 			});
 		</script>
 	</head>

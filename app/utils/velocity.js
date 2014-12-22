@@ -44,13 +44,13 @@ define(function() {
 	};
 
 	/**
-	 * Increase (percent > 0) or decrease (percent < 0) the velocity on both axises.
+	 * Increase (percent > 0) or decrease (percent < 0) the velocity on both axes.
 	 *  
  	 * @param {Number} percent Percentage as a decimal (where 1 = 100%).
 	 */	
-	Velocity.prototype.modify = function(percent) {
+	Velocity.prototype.scale = function(percent) {
 		this.x += this.x * percent;
-		this.y += this.x * percent;
+		this.y += this.y * percent;
 		
 		return this;
 	};
