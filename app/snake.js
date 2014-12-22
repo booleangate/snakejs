@@ -4,6 +4,6 @@ require.config({
 	}
 });
 
-require(["underscore", "components/snake/snake", "components/apple"], function(_, Snake, Apple) {
+require(["underscore", "game-objects/snake", "game-objects/apple"], function(_, Snake, Apple) {
 	
 });
