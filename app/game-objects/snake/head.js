@@ -1,6 +1,6 @@
 define([
 	"game-objects/game-object",
-	"utils/point",
+	"utils/position",
 	"utils/velocity",
 	"utils/bounding-box"
 ], function(GameObject, Position, Velocity, BoundingBox) {

@@ -1,12 +1,12 @@
 define([
-	"utils/point",
+	"utils/position",
 	"utils/velocity",
 	"utils/bounding-box"
 ], function(Position, Velocity, BoundingBox) {
 	"use strict";
 	
 	function getClassName(instance) {
-		return instance.__proto__.constructor.toString().match(/\w+ (\w+)/)[1];
+		return instance.constructor.toString().match(/\w+ (\w+)/)[1];
 	}
 	
 	function GameObject(position) {
@@ -19,6 +19,14 @@ define([
 	
 	GameObject.prototype.draw = function(context) {
 		throw getClassName(this) + ".draw() is not implemented.";
+	};
+	
+	GameObject.prototype.applyVelocity = function(velocity) {
+		
+	};
+	
+	GameObject.prototype.moveTo = function(position) {
+		
 	};
 	
 	GameObject.prototype.getBoundingBox = function() {
