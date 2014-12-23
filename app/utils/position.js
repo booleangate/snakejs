@@ -17,7 +17,14 @@ define([
 		this.y = y || 0;
 	}
 	
-	Position.prototype.move = function(velocity) {
+	Position.prototype.getDelta = function(p) {
+		return {
+			x: p.x - this.x,
+			y: p.y - this.y
+		};
+	};
+	
+	Position.prototype.applyDelta = function(velocity) {
 		this.x += velocity.x;
 		this.y += velocity.y;
 	};
@@ -36,7 +43,7 @@ define([
 	 */
 	Position.getRandom = function(minX, maxX, minY, maxY) {
 		return new Position(
-			_.random(minX, maxX), 
+			_.random(minX, maxX),
 			_.random(minY, maxY)
 		);
 	};
@@ -50,8 +57,8 @@ define([
 	 */
 	Position.getRandomFromReference = function(referencePosition, min, max) {
 		return new Position(
-			referencePosition.x + (_.random(min, max) * Utils.getRandomSign()), 
-			referencePosition.y + (_.random(min, max) * Utils.getRandomSign())
+			referencePosition.x + _.random(min, max) * Utils.getRandomSign(), 
+			referencePosition.y + _.random(min, max) * Utils.getRandomSign()
 		);
 	};
 	

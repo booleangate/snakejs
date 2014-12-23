@@ -35,6 +35,7 @@ define(function() {
 		
 		unit: 10,
 		spacing: 1,
+		lineWidth: 1,
 		defaultGameSpeed: 1000 / 12 // 12 frames a second
 	};
 });

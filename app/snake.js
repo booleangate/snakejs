@@ -94,11 +94,6 @@ require([
 		else if (isPaused) {
 			drawCaption(ctx, "Paused", "Press space to continue");
 		}
-		
-		// snake.spawn();
-		// snake.draw(ctx);
-		
-		return false;
 	}
 	
 	/**
@@ -108,6 +103,20 @@ require([
 		if (isIdle()) {
 			return;
 		}
+		
+			// Place the snake somewhere within the middle half of the screen.
+		var quarterWidth = Math.floor(screenWidth / 4);
+		var quarterHeight = Math.floor(screenHeight / 4);
+		var position = Position.getRandom(quarterWidth, quarterWidth * 3, quarterHeight, quarterHeight * 3);
+		
+		snake.spawn(position);
+		snake.draw(ctx);
+		return;
+		
+		drawBackgorund(ctx, screenWidth, screenHeight);
+		
+		// Draw score
+		drawScore(ctx, score, screenWidth);
 		
 		// Draw apple
 		// apple.setPosition(Position.getRandomFromReference(snake.position, 5, 10))
@@ -138,18 +147,20 @@ require([
 			canvas.width = screenWidth;
 			canvas.height = screenHeight;
 			
+			// Idle into whatever step is appropriate (if the game was being played, it will pause; otherwise, just redraw what was already shown).
 			stepIdle();
 		});
 		
 		// Capture keyboard input.
 		$("body").keydown(function(e) {
-			var v = [];
+			var velocity = false;
 	
 			switch (event.keyCode) {
-				case 37: v = [Config.unit * -1, 0];   break; // Left
-				case 38: v = [0, Config.unit * -1];   break; // Up
-				case 39: v = [Config.unit, 0];        break; // Right
-				case 40: v = [0, Config.unit];        break; // Down
+				// Arrow keys
+				case 37: velocity = new Velocity(-Config.unit, 0); break; // Left
+				case 38: velocity = new Velocity(0, -Config.unit); break; // Up
+				case 39: velocity = new Velocity(Config.unit, 0);  break; // Right
+				case 40: velocity = new Velocity(0, Config.unit);  break; // Down
 	
 				// Space
 				case 32:
@@ -166,22 +177,20 @@ require([
 					return;
 			}
 	
-			// Don't allow for changes in snake velocity if the game is not running
-			if ( !v.length ) {
+			// The game is not running, there is nothing to do.
+			if (isIdle() || !velocity) {
 				return;
 			}
 	
-			// Don't allow the snake to reverse directions/double back by ensuring that the new velocity isn't the opposite of the current
-			// velocity
-			if (
-				(segment.velocity.x && v[0] == segment.velocity.x * -1)
-				|| (segment.velocity.y && v[1] == segment.velocity.y * -1)
+			// Don't allow the snake to reverse directions/double back by ensuring that the new velocity isn't the 
+			// opposite of the current velocity
+			if ((snake.velocity.x && velocity.x == -snake.velocity.x)
+				|| (snake.velocity.y && velocity.y == -snake.velocity.y)
 			) {
 				return;
 			}
 	
-			segment.velocity.x = v[0];
-			segment.velocity.y = v[1];
+			snake.velocity = velocity;
 		});
 		
 		// Capture mouse clicks in the canvas.
