@@ -1,11 +1,12 @@
 define([
+	"underscore",
 	"config",
 	"game-objects/game-object",
 	"game-objects/polygon",
 	"utils/position",
 	"utils/velocity",
 	"utils/bounding-box"
-], function(Config, GameObject, Polygon, Position, Velocity, BoundingBox) {
+], function(_, Config, GameObject, Polygon, Position, Velocity, BoundingBox) {
 	"use strict";
 	
 	var rotationRight = 0,
@@ -32,8 +33,16 @@ define([
 		return this.triangle.setPosition(position);
 	};
 	
+	Head.prototype.getPosition = function() {
+		return this.triangle.getPosition();
+	};
+	
 	Head.prototype.setVelocity = function(velocity) {
 		return this.triangle.setVelocity(velocity);
+	};
+	
+	Head.prototype.getVelocity = function() {
+		return this.triangle.getVelocity();
 	};
 	
 	Head.prototype.move = function(velocity) {
@@ -41,8 +50,12 @@ define([
 	};
 	
 	Head.prototype.draw = function(ctx) {
-		var originalPosition = new Position(this.triangle.positions[0]);
+		// Save the original position of the triangle.  We will need to move it to the origin to do our rotation and 
+		// will want to move it back when we're done.
+		var originalPosition = _.clone(this.triangle.positions[0]);
 		
+		// We're about to do some translations of the context.  Save its current state so we can revert back to it after 
+		// we're done rotating things.  This will prevent the reset of the things that we draw from being affected.
 		ctx.save();
 
 		// Rotate the object within its bounding box, not on its first point
@@ -53,14 +66,18 @@ define([
 			case rotationDown:  ctx.translate(originalPosition.x + unit, originalPosition.y + spacing); break;
 		}
 
-		this.triangle.moveTo(new Position(0, 0));
+		// Move to origin.
+		this.triangle.setPosition(new Position(0, 0));
 
+		// Rotate and draw.
 		ctx.rotate(this.rotation * Math.PI);
 		this.triangle.draw(ctx);
 
+		// Restore canvas translation.
 		ctx.restore();
 
-		this.triangle.moveTo(originalPosition);
+		// Move the now rotated triangle back to where it belongs.
+		this.triangle.setPosition(originalPosition);
 	};
 	
 	Head.prototype.getBoundingBox = function() {

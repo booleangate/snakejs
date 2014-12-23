@@ -43,8 +43,32 @@ require([
 	}
 	
 	function activate() {
+		if (isNewGame) {
+			// Place the snake somewhere within the middle half of the screen.
+			var quarterWidth = Math.floor(screenWidth / 4);
+			var quarterHeight = Math.floor(screenHeight / 4);
+			var position = Position.getRandom(quarterWidth, quarterWidth * 3, quarterHeight, quarterHeight * 3);
+			
+			snake.spawn(position);
+			moveApple();
+		}
+		
 		isNewGame = isPaused = isGameOver = false;
 		stepActive();
+	}
+	
+	function moveApple() {
+		var min = Config.gameObjects.apple.relativeDistance.min, 
+			max = Config.gameObjects.apple.relativeDistance.max;
+		
+		do {
+			apple.setRelativeRandomPosition(snake, min, max);
+		} while (!isLegalApplePosition());
+	}
+	
+	function isLegalApplePosition() {
+		// TODO
+		return true;	
 	}
 	
 	function isIdle() {
@@ -104,28 +128,22 @@ require([
 			return;
 		}
 		
-			// Place the snake somewhere within the middle half of the screen.
-		var quarterWidth = Math.floor(screenWidth / 4);
-		var quarterHeight = Math.floor(screenHeight / 4);
-		var position = Position.getRandom(quarterWidth, quarterWidth * 3, quarterHeight, quarterHeight * 3);
-		
-		snake.spawn(position);
-		snake.draw(ctx);
-		return;
-		
 		drawBackgorund(ctx, screenWidth, screenHeight);
 		
 		// Draw score
 		drawScore(ctx, score, screenWidth);
 		
-		// Draw apple
-		// apple.setPosition(Position.getRandomFromReference(snake.position, 5, 10))
-			// .draw(ctx);
-			
-		// Draw snake
+		// Move objects
+		// TODO
+		
+		// Draw game objects
+		apple.draw(ctx);
+		snake.draw(ctx);
 		
 		// Check collisions
+		// TODO
 		
+		return;
 
 		setTimeout(function() {
 			requestAnimationFrame(stepActive, ctx);
@@ -140,12 +158,16 @@ require([
 		
 		ctx = canvas.getContext("2d");
 		
-		// When resizing the window, update the canvas size to fit.
-		$(window).resize(function() {
+		function updateScreenSize() {
 			screenWidth = window.innerWidth * .9;
 			screenHeight = window.innerHeight * .75;
 			canvas.width = screenWidth;
 			canvas.height = screenHeight;
+		}
+		
+		// When resizing the window, update the canvas size to fit.
+		$(window).resize(function() {
+			updateScreenSize();
 			
 			// Idle into whatever step is appropriate (if the game was being played, it will pause; otherwise, just redraw what was already shown).
 			stepIdle();
@@ -222,10 +244,10 @@ require([
 		});
 
 		// Resize the game to match the window and show the canvas.
-		$(window).trigger("resize");
+		updateScreenSize();
 		$(canvas).css("display", "block");
 				
 		// Start the game.
-		newGame();
+		activate();
 	});
 });

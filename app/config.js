@@ -1,6 +1,8 @@
 define(function() {
 	"use strict";
 	
+	var unitSize = 15;
+	
 	return {
 		text: {
 			caption: {
@@ -26,14 +28,18 @@ define(function() {
 				initialSize: 4
 			},
 			apple: {
-				color: "red"
+				color: "red",
+				relativeDistance: {
+					min: unitSize * 4,
+					max: unitSize * 10
+				}
 			},
 			background: {
 				color: "rgba(25, 25, 25, 1)"
 			}
 		},
 		
-		unit: 10,
+		unit: unitSize,
 		spacing: 1,
 		lineWidth: 1,
 		defaultGameSpeed: 1000 / 12 // 12 frames a second

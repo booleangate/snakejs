@@ -81,12 +81,16 @@ define([
 		return this;
 	};
 	
-	Polygon.prototype.moveTo = function(newPosition) {
-		var delta = this.positions[0].getDelta(newPosition);
+	Polygon.prototype.setPosition = function(position) {
+		var delta = this.positions[0].getDelta(position);
 		
 		applyDelta(this, delta);
 	
 		return this;
+	};
+	
+	Polygon.prototype.getPosition = function() {
+		return this.positions[0];
 	};
 	
 	function applyDelta(polygon, delta) {

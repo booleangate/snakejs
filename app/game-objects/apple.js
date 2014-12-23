@@ -29,6 +29,10 @@ define([
 		return this;
 	};
 	
+	Apple.prototype.setRelativeRandomPosition = function(gameObject, min, max) {
+		this.setPosition(Position.getRandomFromReference(gameObject.getPosition(), min, max));
+	};
+	
 	Apple.prototype.draw = function(ctx) {
 		ctx.beginPath();
 		ctx.fillStyle = Config.gameObjects.apple.color;

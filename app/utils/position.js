@@ -17,10 +17,10 @@ define([
 		this.y = y || 0;
 	}
 	
-	Position.prototype.getDelta = function(p) {
+	Position.prototype.getDelta = function(position) {
 		return {
-			x: p.x - this.x,
-			y: p.y - this.y
+			x: position.x - this.x,
+			y: position.y - this.y
 		};
 	};
 	
