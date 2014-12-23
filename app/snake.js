@@ -2,24 +2,85 @@ require([
 	"jquery",
 	"underscore",
 	"config", 
+	"utils/position",
 	"game-objects/snake", 
 	"game-objects/apple",
 	"game-objects/draw-helpers/background",
 	"game-objects/draw-helpers/caption",
-	"game-objects/draw-helpers/score"
-], function($, _, Config, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
+	"game-objects/draw-helpers/score",
+], function($, _, Config, Position, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
 	"use strict";
 
 	var isNewGame = true, 
 		isPaused = false,
 		isGameOver = false,
+		isMuted = false,
+		score = 0,
+		speed = Config.defaultGameSpeed,
 		apple = new Apple(),
 		snake = new Snake(),
 		ctx,
 		screenWidth,
 		screenHeight,
-		score;
+		$audio;
+	
+	function newGame() {
+		isNewGame = true;
+		score = 0;
+		stopAudio();
+		stepIdle();
+	}
+	
+	function pause() {
+		isPaused = true;
+		stepIdle();
+	}
+	
+	function gameOver() {
+		isGameOver = true;
+		stopAudio();
+		stepIdle();
+	}
+	
+	function activate() {
+		isNewGame = isPaused = isGameOver = false;
+		stepActive();
+	}
+	
+	function isIdle() {
+		return isNewGame || isPaused || isGameOver;
+	}
+	
+	function isActive() {
+		return !isIdle();
+	}
+	
+	/**
+	 * Play an audio clip for each score.
+ 	 * @param {Object} score
+	 */
+	function playAudio(score) {
+		// Make score an index.
+		--score;
 		
+		if (score < $audio.length) {
+			$audio.get(score).play();
+		}
+	}
+	
+	/**
+	 * Stop and rewind all audio
+	 */
+	function stopAudio() {
+		$audio.each(function(i, audio) {
+			audio.pause();
+			audio.currentTime = 0;
+		});
+	}
+	
+	/**
+	 * Draw appropriate idle screen.
+	 */
 	function stepIdle() {
 		drawBackgorund(ctx, screenWidth, screenHeight);
 
@@ -33,26 +94,38 @@ require([
 		else if (isPaused) {
 			drawCaption(ctx, "Paused", "Press space to continue");
 		}
-
+		
+		// snake.spawn();
+		// snake.draw(ctx);
+		
 		return false;
 	}
 	
-	function stepPause() {
-		
-	}
-	
-	
+	/**
+	 * The game!
+	 */
 	function stepActive() {
+		if (isIdle()) {
+			return;
+		}
+		
+		// Draw apple
+		// apple.setPosition(Position.getRandomFromReference(snake.position, 5, 10))
+			// .draw(ctx);
+			
+		// Draw snake
+		
+		// Check collisions
+		
+
 		setTimeout(function() {
-			requestAnimFrame(stepActive, ctx);
+			requestAnimationFrame(stepActive, ctx);
 		}, speed);
 	}
 	
-	function stepGameOver() {
-		
-	}
-	
-	// On-load
+	/**
+	 * Onload and other event handlers.
+	 */
 	$(function() {
 		var canvas = $("canvas")[0];
 		
@@ -64,8 +137,9 @@ require([
 			screenHeight = window.innerHeight * .75;
 			canvas.width = screenWidth;
 			canvas.height = screenHeight;
+			
+			stepIdle();
 		});
-		
 		
 		// Capture keyboard input.
 		$("body").keydown(function(e) {
@@ -79,7 +153,12 @@ require([
 	
 				// Space
 				case 32:
-					stepPause();
+					if (isActive()) {
+						pause();
+					} else {
+						activate();
+					}
+					
 					return;
 	
 				// Ignore all other input
@@ -107,18 +186,37 @@ require([
 		
 		// Capture mouse clicks in the canvas.
 		$(canvas).click(function() {
-			isPaused = true;
-			stepIdle();
+			// If the game is not in a resetable state, do nothing.
+			if (isNewGame || isGameOver) {
+				return;
+			}
+			
+			pause();
 			
 			if (confirm("Are you sure you want to reset the game?")) {
-				isNewGame = true;
-				stepIdle();
+				newGame();
 			}
 		});
+		
+		// Audio controls
+		$("#inp-enable-sounds").change(function() {
+			isMuted = !this.checked;
+		});
+		
+		// Audio bits.
+		$audio = $("audio");
+		
+		// Make the full song (the last audio element) loop.
+		$audio.last().on("ended", function() {
+			this.currentTime = 0;
+			this.play();
+		});
 
-		// Start the game.
+		// Resize the game to match the window and show the canvas.
 		$(window).trigger("resize");
-		stepIdle();
-		$(canvas).css("display", "block");		
+		$(canvas).css("display", "block");
+				
+		// Start the game.
+		newGame();
 	});
 });

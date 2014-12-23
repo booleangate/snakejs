@@ -5,16 +5,10 @@ define([
 	"game-objects/game-object",
 	"utils/position",
 	"utils/velocity",
-	"utils/bounding-box"
-], function(config, Head, Body, GameObject, Position, Velocity, BoundingBox) {
+	"utils/bounding-box",
+	"utils/utils"
+], function(Config, Head, Body, GameObject, Position, Velocity, BoundingBox, Utils) {
 	"use strict";
-	
-	/**
-	 * @return Number -1, 0, or 1.
-	 */
-	function getRandomDirection() {
-		return Math.floor(Math.random() * (3)) + -1;
-	}
 	
 	function Snake() {
 		this.head = new Head();
@@ -27,9 +21,18 @@ define([
 	Snake.prototype.spawn = function(position, size) {
 		size = size || Config.gameObjects.snake.initialSize;
 		
-		var x = getRandomDirection();
+		var xDirection = _.random(-1, 1),
+			yDirection = _.random(-1, 1);
 		
 		console.log("Make a snake starting at " + position + " that is " +size + " long");
+		
+		for (var i = 0; i < Config.gameObjects.snake.initialSize; ++i) {
+			this.body.push(new Body());
+		}
+	};
+	
+	Snake.prototype.draw = function(ctx) {
+		
 	};
 	
 	return Snake;

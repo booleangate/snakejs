@@ -1,7 +1,10 @@
 /**
  * A simple Cartesian coordinate point.
  */
-define(function() {
+define([
+	"underscore",
+	"utils/utils"
+], function(_, Utils) {
 	"use strict";
 	
 	/**
@@ -14,6 +17,15 @@ define(function() {
 		this.y = y || 0;
 	}
 	
+	Position.prototype.move = function(velocity) {
+		this.x += velocity.x;
+		this.y += velocity.y;
+	};
+	
+	Position.prototype.toString = function() {
+		return "Position(x = " + this.x + ", y = " + this.y + ")";
+	};
+	
 	/**
 	 * Generate a random position within the ranges specified such that ([minX, maxX], [minY, maxY]).
 	 * 
@@ -24,10 +36,24 @@ define(function() {
 	 */
 	Position.getRandom = function(minX, maxX, minY, maxY) {
 		return new Position(
-			Math.randomRange(minX, maxX), 
-			Math.randomRange(minY, maxY)
+			_.random(minX, maxX), 
+			_.random(minY, maxY)
 		);
-	}; 
+	};
+	
+	/**
+	 * Get a point at least `min` units away but no more than `max` units away from `referencePoint`.
+	 * 
+	 * @param {Position} referencePosition
+	 * @param {Number} min Should be positive
+	 * @param {Number} max Should be positive
+	 */
+	Position.getRandomFromReference = function(referencePosition, min, max) {
+		return new Position(
+			referencePosition.x + (_.random(min, max) * Utils.getRandomSign()), 
+			referencePosition.y + (_.random(min, max) * Utils.getRandomSign())
+		);
+	};
 	
 	return Position;	
 });

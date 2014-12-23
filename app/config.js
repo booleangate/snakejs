@@ -26,7 +26,7 @@ define(function() {
 				initialSize: 4
 			},
 			apple: {
-				apple: "red"
+				color: "red"
 			},
 			background: {
 				color: "rgba(25, 25, 25, 1)"
@@ -35,5 +35,6 @@ define(function() {
 		
 		unit: 10,
 		spacing: 1,
+		defaultGameSpeed: 1000 / 12 // 12 frames a second
 	};
 });
