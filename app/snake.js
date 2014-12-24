@@ -79,7 +79,7 @@ require([
 	 * Draw appropriate idle screen.
 	 */
 	function stepIdle() {
-		drawBackgorund(ctx, screenWidth, screenHeight);
+		// drawBackgorund(ctx, screenWidth, screenHeight);
 
 		if (isNewGame) {
 			drawCaption(ctx, "Snake-a-snake!", ["Use the arrow keys to guide the snake to collect apples.", "Press space to begin."]);
@@ -182,24 +182,25 @@ require([
 		// Capture keyboard input.
 		$("body").keydown(function(e) {
 			var newVelocity = false,
+				unit = Config.unit + Config.spacing,
 				rotation, currentVelocity;
 	
 			switch (event.keyCode) {
 				// Arrow keys
 				case 37: // Left
-					newVelocity = new Velocity(-Config.unit, 0);
+					newVelocity = new Velocity(-unit, 0);
 					rotation = Config.rotation.left;
 					break;
 				case 38: // Up
-					newVelocity = new Velocity(0, -Config.unit);
+					newVelocity = new Velocity(0, -unit);
 					rotation = Config.rotation.up;
 					break;
 				case 39: // Right
-					newVelocity = new Velocity(Config.unit, 0);
+					newVelocity = new Velocity(unit, 0);
 					rotation = Config.rotation.right;
 					break;
 				case 40: // Down
-					newVelocity = new Velocity(0, Config.unit);
+					newVelocity = new Velocity(0, unit);
 					rotation = Config.rotation.down;
 					break;
 	

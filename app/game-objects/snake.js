@@ -68,15 +68,15 @@ define([
 	};
 	
 	Snake.prototype.move = function() {
-		this.head.move();
 		// The last peice of the body become the first piece.
-		// TODO
+		var tail = this.body.pop();
+		this.body.unshift(tail);
 		
 		// Move that piece to where the head is now.
-		// TODO
+		tail.setPosition(new Position(this.head.getPosition()));
 		
 		// Move the head in whatever direction it should be going.
-		// TODO
+		this.head.move();
 	};
 	
 	Snake.prototype.grow = function() {

@@ -26,8 +26,7 @@ define([
 	_.extend(Head.prototype, GameObject.prototype);
 	
 	Head.prototype.spawn = function(position) {
-		var unit = Config.unit + Config.spacing,
-			velocity;
+		var velocity;
 		
 		this.setPosition(position);
 		
@@ -36,25 +35,25 @@ define([
 			// Facing right
 			case 1:
 				this.rotation = Config.rotation.right;
-				velocity = new Velocity(-unit, 0);
+				velocity = new Velocity(-unit - spacing, 0);
 				break;
 				
 			// Facing right
 			case 2:
 				this.rotation = Config.rotation.left;
-				velocity = new Velocity(unit, 0);
+				velocity = new Velocity(unit + spacing, 0);
 				break;
 				
 			// Facing right
 			case 3:
 				this.rotation = Config.rotation.up;
-				velocity = new Velocity(0, unit);
+				velocity = new Velocity(0, unit + spacing);
 				break;
 				
 			// Facing right
 			case 4:
 				this.rotation = Config.rotation.down;
-				velocity = new Velocity(0, -unit);
+				velocity = new Velocity(0, -unit - spacing);
 				break;
 		}
 		
