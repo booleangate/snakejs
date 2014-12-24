@@ -2,11 +2,10 @@ define([
 	"underscore",
 	"config",
 	"game-objects/game-object",
-	"game-objects/polygon",
 	"utils/position",
 	"utils/velocity",
 	"utils/bounding-box"
-], function(_, Config, GameObject, Polygon, Position, Velocity, BoundingBox) {
+], function(_, Config, GameObject, Position, Velocity, BoundingBox) {
 	"use strict";
 	
 	var rotationRight = 0,
@@ -17,12 +16,13 @@ define([
 		spacing = Config.spacing;
 		
 	function Head() {
-		this.triangle = new Polygon(
+		this.positions = [
 			new Position(0, 0),
 			new Position(unit , unit / 2),
 			new Position(0, unit )
-		);
-
+		];
+		this.velocity = new Velocity();
+		this.boundingBox = null;
 		this.rotation = rotationRight;
 	}
 	
@@ -30,29 +30,36 @@ define([
 	_.extend(Head.prototype, GameObject.prototype);
 	
 	Head.prototype.setPosition = function(position) {
-		return this.triangle.setPosition(position);
+		var delta = this.positions[0].getDelta(position);
+		
+		applyDelta(this, delta);
+	
+		return this;
 	};
 	
 	Head.prototype.getPosition = function() {
-		return this.triangle.getPosition();
+		return this.positions[0];
 	};
 	
-	Head.prototype.setVelocity = function(velocity) {
-		return this.triangle.setVelocity(velocity);
+	Head.prototype.move = function() {
+		applyDelta(this, this.velocity);
+	
+		return this;
 	};
 	
-	Head.prototype.getVelocity = function() {
-		return this.triangle.getVelocity();
-	};
-	
-	Head.prototype.move = function(velocity) {
-		return this.triangle.move(velocity);
+	Head.prototype.getBoundingBox = function() {
+		if (!this.boundingBox) {
+			this.boundingBox = calculateBoundingBox(this.positions);
+		}
+		
+		return this.boundingBox;
 	};
 	
 	Head.prototype.draw = function(ctx) {
 		// Save the original position of the triangle.  We will need to move it to the origin to do our rotation and 
 		// will want to move it back when we're done.
-		var originalPosition = _.clone(this.triangle.positions[0]);
+		var originalPosition = _.clone(this.positions[0]),
+			color = Config.gameObjects.snake.color;
 		
 		// We're about to do some translations of the context.  Save its current state so we can revert back to it after 
 		// we're done rotating things.  This will prevent the reset of the things that we draw from being affected.
@@ -67,26 +74,61 @@ define([
 		}
 
 		// Move to origin.
-		this.triangle.setPosition(new Position(0, 0));
+		this.setPosition(new Position(0, 0));
 
 		// Rotate and draw.
 		ctx.rotate(this.rotation * Math.PI);
-		this.triangle.draw(ctx);
+		
+		ctx.beginPath();
+		ctx.fillStyle = color;
+		ctx.strokeStyle = color;
+		ctx.lineWidth = Config.lineWidth;
+	
+		_.each(this.positions, function(p, i) {
+			if (i == 0) {
+				ctx.moveTo(p.x, p.y);
+			} else {
+				ctx.lineTo(p.x, p.y);
+			}
+		});
+	
+		ctx.fill();
+		ctx.stroke();
+		ctx.closePath();
 
 		// Restore canvas translation.
 		ctx.restore();
 
 		// Move the now rotated triangle back to where it belongs.
-		this.triangle.setPosition(originalPosition);
+		this.setPosition(originalPosition);
+	};
+		
+	function calculateBoundingBox(positions) {
+		var leftX   = null,
+			rightX  = null,
+			topY    = null,
+			bottomY = null;
+	
+		// Calculate the bounding box of this object by finding its extremes
+		_.each(positions, function(value) {
+			if (leftX === null   || value.x < leftX)   leftX   = value.x;
+			if (rightX === null  || value.x > rightX)  rightX  = value.x;
+			if (topY === null    || value.y < topY)    topY    = value.y;
+			if (bottomY === null || value.y > bottomY) bottomY = value.y;
+		});
+	
+		return new BoundingBox(new Position(leftX, topY), rightX - leftX, bottomY - topY);
 	};
 	
-	Head.prototype.getBoundingBox = function() {
-		return this.triangle.getBoundingBox();
-	};
+	function applyDelta(head, delta) {
+		head.positions.forEach(function(position) {
+			position.applyDelta(delta);
+		});
 	
-	Head.prototype.isColliding = function(gameObject) {
-		return this.triangle.isColliding(gameObject);
-	};
+		if (head.boundingBox) {
+			head.boundingBox.position.applyDelta(delta);
+		}
+	}
 	
 	return Head;
 });
