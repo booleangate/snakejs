@@ -30,8 +30,8 @@ define(function() {
 			apple: {
 				color: "red",
 				relativeDistance: {
-					min: unitSize * 4,
-					max: unitSize * 10
+					min: unitSize * 5,
+					max: unitSize * 12
 				}
 			},
 			background: {

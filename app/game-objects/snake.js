@@ -26,7 +26,6 @@ define([
 		size = size || Config.gameObjects.snake.initialSize;
 		
 		this.setPosition(position);
-		console.log(position);
 		
 		for (var i = 0; i < Config.gameObjects.snake.initialSize; ++i) {
 			// this.body.push(new Body());

@@ -63,10 +63,10 @@ require([
 		
 		do {
 			apple.setRelativeRandomPosition(snake, min, max);
-		} while (!isLegalApplePosition());
+		} while (!isLegalApplePosition(apple.getPosition()));
 	}
 	
-	function isLegalApplePosition() {
+	function isLegalApplePosition(position) {
 		// TODO
 		return true;	
 	}
@@ -137,7 +137,10 @@ require([
 		// TODO
 		
 		// Draw game objects
-		apple.draw(ctx);
+		for (var i = 0; i< 50; ++i) {
+			moveApple();
+			apple.draw(ctx);
+		}
 		snake.draw(ctx);
 		
 		// Check collisions
