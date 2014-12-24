@@ -10,10 +10,6 @@ define([
 ], function(Position, Velocity, BoundingBox) {
 	"use strict";
 	
-	function getClassName(instance) {
-		return instance.constructor.toString().match(/\w+ (\w+)/)[1];
-	}
-	
 	function GameObject(position, velocity) {
 		this.setPosition(position);
 		this.setVelocity(velocity); 
@@ -85,6 +81,10 @@ define([
 	GameObject.prototype.getHeight = function() {
 		throw getClassName(this) + ".getHeight() is not implemented.";
 	};
+	
+	function getClassName(instance) {
+		return instance.constructor.toString().match(/\w+ (\w+)/)[1];
+	}
 
 	return GameObject;
 });

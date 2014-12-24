@@ -2,6 +2,8 @@ define([
 	"underscore",
 	"jquery"
 ], function(_, $) {
+	"use strict";
+	
 	function AudioLibrary() {
 		this.tracks = [];
 		this.currentTrack = false;

@@ -37,7 +37,6 @@ define([
 	
 		this.positions = [];
 		this.velocity = new Velocity();
-		this.lineWidth = 1;
 		this.boundingBox = null;
 	
 		_.each(arguments, function(value) {

@@ -3,24 +3,6 @@ define([
 ],function(Range) {
 	"use strict";
 	
-	function updateRanges(boundingBox) {
-		var pos = boundingBox.position;
-		
-		boundingBox.rangeX.update(pos.x, pos.x + boundingBox.width);
-		boundingBox.rangeY.update(pos.y, pos.y + boundingBox.height);
-		
-		return boundingBox;
-	}
-	
-	function BoundingBox(position, width, height) {
-		this.position = position;
-		this.width = width;
-		this.height = height;
-		
-		this.rangeX = new Range(position.x, position.x + width);
-		this.rangeY = new Range(position.y, position.y + width);
-	}
-	
 	BoundingBox.prototype.setPosition = function(position) {
 		this.position = position;
 		
@@ -53,6 +35,23 @@ define([
 		return "BoundingBox(rangeX = " + this.rangeX + ", rangeY = " + this.rangeY + ")";
 	};
 	
+	function updateRanges(boundingBox) {
+		var pos = boundingBox.position;
+		
+		boundingBox.rangeX.update(pos.x, pos.x + boundingBox.width);
+		boundingBox.rangeY.update(pos.y, pos.y + boundingBox.height);
+		
+		return boundingBox;
+	}
+	
+	function BoundingBox(position, width, height) {
+		this.position = position;
+		this.width = width;
+		this.height = height;
+		
+		this.rangeX = new Range(position.x, position.x + width);
+		this.rangeY = new Range(position.y, position.y + width);
+	}
 	
 	return BoundingBox;
 });
