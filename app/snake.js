@@ -3,42 +3,40 @@ require([
 	"underscore",
 	"config", 
 	"utils/position",
+	"utils/audio-library",
 	"game-objects/snake", 
 	"game-objects/apple",
 	"game-objects/draw-helpers/background",
 	"game-objects/draw-helpers/caption",
 	"game-objects/draw-helpers/score",
-], function($, _, Config, Position, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
+], function($, _, Config, Position, AudioLibrary, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
 	"use strict";
 
 	var isNewGame = true, 
 		isPaused = false,
 		isGameOver = false,
-		isMuted = false,
 		score = 0,
 		speed = Config.defaultGameSpeed,
 		apple = new Apple(),
 		snake = new Snake(),
+		audioLibrary = new AudioLibrary(),
 		ctx,
 		screenWidth,
-		screenHeight,
-		$audio;
+		screenHeight;
 	
+	/**
+	 * Called when the game first loads and when the user resets the game.
+	 */
 	function newGame() {
+		// Reset all flags.
 		isNewGame = true;
+		isPaused = false;
+		isGameOver = false;
 		score = 0;
-		stopAudio();
-		stepIdle();
-	}
-	
-	function pause() {
-		isPaused = true;
-		stepIdle();
-	}
-	
-	function gameOver() {
-		isGameOver = true;
-		stopAudio();
+		
+		// Stop all audio.
+		audioLibrary.stop();
+		
 		stepIdle();
 	}
 	
@@ -54,63 +52,26 @@ require([
 		}
 		
 		isNewGame = isPaused = isGameOver = false;
+		audioLibrary.resume();
 		stepActive();
 	}
 	
-	function moveApple() {
-		do {
-			apple.spawn(snake);
-		} while (!isLegalApplePosition(apple));
-	}
-	
-	/*
-	 * Make sure the apple is completely within the
+	/**
+	 * Called when the user pauses the game directly or resizes the screen.
 	 */
-	function isLegalApplePosition(apple) {
-		var position = apple.getPosition(),
-			spacing = Config.spacing;
-		
-		// Apple is above or to the left of the screen.
-		if (position.x <= spacing || position.y <= spacing) {
-			return false;
-		}
-		// Apple is below or to the right of the screen.
-		else if (position.x + spacing + apple.getWidth() > screenWidth || position.y + spacing + apple.getHeight() > screenHeight) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-	function isIdle() {
-		return isNewGame || isPaused || isGameOver;
-	}
-	
-	function isActive() {
-		return !isIdle();
+	function pause() {
+		isPaused = true;
+		audioLibrary.pause();
+		stepIdle();
 	}
 	
 	/**
-	 * Play an audio clip for each score.
- 	 * @param {Object} score
+	 * Called when the user eats it.
 	 */
-	function playAudio(score) {
-		// Make score an index.
-		--score;
-		
-		if (score < $audio.length) {
-			$audio.get(score).play();
-		}
-	}
-	
-	/**
-	 * Stop and rewind all audio
-	 */
-	function stopAudio() {
-		$audio.each(function(i, audio) {
-			audio.pause();
-			audio.currentTime = 0;
-		});
+	function gameOver() {
+		isGameOver = true;
+		audioLibrary.stop();
+		stepIdle();
 	}
 	
 	/**
@@ -159,6 +120,39 @@ require([
 		setTimeout(function() {
 			requestAnimationFrame(stepActive, ctx);
 		}, speed);
+	}
+	
+	function moveApple() {
+		do {
+			apple.spawn(snake);
+		} while (!isLegalApplePosition(apple));
+	}
+	
+	/*
+	 * Make sure the apple is completely within the
+	 */
+	function isLegalApplePosition(apple) {
+		var position = apple.getPosition(),
+			spacing = Config.spacing;
+		
+		// Apple is above or to the left of the screen.
+		if (position.x <= spacing || position.y <= spacing) {
+			return false;
+		}
+		// Apple is below or to the right of the screen.
+		else if (position.x + spacing + apple.getWidth() > screenWidth || position.y + spacing + apple.getHeight() > screenHeight) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	function isIdle() {
+		return isNewGame || isPaused || isGameOver;
+	}
+	
+	function isActive() {
+		return !isIdle();
 	}
 	
 	/**
@@ -242,16 +236,14 @@ require([
 		
 		// Audio controls
 		$("#inp-enable-sounds").change(function() {
-			isMuted = !this.checked;
+			audioLibrary.mute(!this.checked);
 		});
 		
-		// Audio bits.
-		$audio = $("audio");
-		
-		// Make the full song (the last audio element) loop.
-		$audio.last().on("ended", function() {
-			this.currentTime = 0;
-			this.play();
+		// Audio tracks.
+		$("audio").each(function(i, track) {
+			var loop = !!$(track).attr("loop");
+			
+			audioLibrary.addTrack(track, loop);
 		});
 
 		// Resize the game to match the window and show the canvas.
