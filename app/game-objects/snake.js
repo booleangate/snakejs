@@ -19,12 +19,10 @@ define([
 	// Extend GameObject
 	_.extend(Snake.prototype, GameObject.prototype);
 	
-	Snake.prototype.spawn = function(position, size) {
+	Snake.prototype.spawn = function(position) {
 		var xDirection = _.random(-1, 1),
 			yDirection = _.random(-1, 1);
 			
-		size = size || Config.gameObjects.snake.initialSize;
-		
 		this.setPosition(position);
 		
 		for (var i = 0; i < Config.gameObjects.snake.initialSize; ++i) {

@@ -46,7 +46,7 @@ define([
 	};
 	
 	GameObject.prototype.getBoundingBox = function() {
-		return new BoundingBox(this.position, this.getWidth(), this.getHeight());
+		return new BoundingBox(this.getPosition(), this.getWidth(), this.getHeight());
 	};
 	
 	/**

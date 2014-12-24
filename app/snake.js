@@ -58,17 +58,28 @@ require([
 	}
 	
 	function moveApple() {
-		var min = Config.gameObjects.apple.relativeDistance.min, 
-			max = Config.gameObjects.apple.relativeDistance.max;
-		
 		do {
-			apple.setRelativeRandomPosition(snake, min, max);
-		} while (!isLegalApplePosition(apple.getPosition()));
+			apple.spawn(snake);
+		} while (!isLegalApplePosition(apple));
 	}
 	
-	function isLegalApplePosition(position) {
-		// TODO
-		return true;	
+	/*
+	 * Make sure the apple is completely within the
+	 */
+	function isLegalApplePosition(apple) {
+		var position = apple.getPosition(),
+			spacing = Config.spacing;
+		
+		// Apple is above or to the left of the screen.
+		if (position.x <= spacing || position.y <= spacing) {
+			return false;
+		}
+		// Apple is below or to the right of the screen.
+		else if (position.x + spacing + apple.getWidth() > screenWidth || position.y + spacing + apple.getHeight() > screenHeight) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	function isIdle() {
@@ -137,10 +148,7 @@ require([
 		// TODO
 		
 		// Draw game objects
-		for (var i = 0; i< 50; ++i) {
-			moveApple();
-			apple.draw(ctx);
-		}
+		apple.draw(ctx);
 		snake.draw(ctx);
 		
 		// Check collisions

@@ -1,10 +1,11 @@
 define([
+	"underscore",
 	"config",
 	"game-objects/game-object",
 	"utils/position",
 	"utils/velocity",
 	"utils/bounding-box"
-], function(Config, GameObject, Position, Velocity, BoundingBox) {
+], function(_, Config, GameObject, Position, Velocity, BoundingBox) {
 	"use strict";
 	
 	var radius = (Config.unit + Config.spacing) / 2;
@@ -16,21 +17,37 @@ define([
 	
 	_.extend(Apple.prototype, GameObject.prototype);
 	
+	Apple.prototype.spawn = function(snake) {
+		var min = Config.gameObjects.apple.relativeDistance.min, 
+			max = Config.gameObjects.apple.relativeDistance.max;
+			
+		this.setPosition(Position.getRandomFromReference(snake.getPosition(), min, max));
+		
+		return this;
+	};
+	
 	/**
-	 * Set the position of the top left corner of the bounding box of the apple (which is a circle).  We will determine the center point.
+	 * Set the position with the top left corner of the bounding box of the apple (which is a circle).  We will determine the center point.
 	 * 
  	 * @param {Position} position
 	 */
 	Apple.prototype.setPosition = function(position) {
-		position.x += radius;
-		position.y += radius;
 		this.position = position;
+		this.position.x += radius;
+		this.position.y += radius;
 		 
 		return this;
 	};
 	
-	Apple.prototype.setRelativeRandomPosition = function(gameObject, min, max) {
-		this.setPosition(Position.getRandomFromReference(gameObject.getPosition(), min, max));
+	/**
+	 * Get the position of the top left corner of the bounding box of the apple.
+	 */
+	Apple.prototype.getPosition = function() {
+		var position = _.clone(this.position);
+		position.x -= radius;
+		position.y -= radius;
+		 
+		return position;
 	};
 	
 	Apple.prototype.draw = function(ctx) {
@@ -50,6 +67,7 @@ define([
 	Apple.prototype.getHeight = function() {
 		return sideSize;
 	};
+	
 	
 	return Apple;
 });
