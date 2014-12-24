@@ -27,8 +27,6 @@ define([
 		var bodyVelocity = this.head.spawn(position),
 			bodyPosition = new Position(position);
 		
-		console.log(bodyVelocity, position);
-		
 		for (var i = 0; i < Config.gameObjects.snake.initialSize; ++i) {
 			bodyPosition = new Position(bodyPosition).move(bodyVelocity);
 			this.body.push(new Body(bodyPosition));

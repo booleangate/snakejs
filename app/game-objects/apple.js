@@ -18,8 +18,8 @@ define([
 	_.extend(Apple.prototype, GameObject.prototype);
 	
 	Apple.prototype.spawn = function(snake) {
-		var min = Config.gameObjects.apple.relativeDistance.min, 
-			max = Config.gameObjects.apple.relativeDistance.max;
+		var min = Config.gameObjects.apple.spawnDistance.min, 
+			max = Config.gameObjects.apple.spawnDistance.max;
 			
 		this.setPosition(Position.getRandomFromReference(snake.getPosition(), min, max));
 		

@@ -29,9 +29,9 @@ define(function() {
 			},
 			apple: {
 				color: "red",
-				relativeDistance: {
-					min: unitSize * 5,
-					max: unitSize * 12
+				spawnDistance: {
+					min: unitSize * 8,
+					max: unitSize * 10
 				}
 			},
 			background: {

@@ -60,38 +60,34 @@ define([
 	};
 	
 	/**
-	 * Generate a point in a max-by-max square centered on referencePoint that is at least min distance away from referencePoint 
+	 * Generate a point on an arc that is between min and max units away from reference point.
 	 * 
-	 * M M M M M M M M M
-	 * M               M
-	 * M   m m m m m   M
+	 *      M M M M
+	 *    M         M
+	 *  M    m m m    M
 	 * M   m       m   M
 	 * M   m   r   m   M
  	 * M   m       m   M
-	 * M   m m m m m   M
-	 * M               M
-	 * M M M M M M M M M
+	 *  M    m m m    M
+	 *    M         M
+	 *      M M M M  
 	 * 
 	 * M is the maximum range, m is the minimum range, and r is the reference point
 	 * 
 	 * @param {Position} referencePosition
 	 * @param {Number} min Should be positive
 	 * @param {Number} max Should be positive
+	 * @return {Position}
+	 * @see http://stackoverflow.com/a/839931/126562
 	 */
 	Position.getRandomFromReference = function(referencePosition, min, max) {
-		// Generate x across the entire range.
-		var x = _.random(referencePosition.x - max, referencePosition.x + max),
-			y;
+		var radius = _.random(min, max),
+			angle = Math.random() * Math.PI * 2;
 		
-		// If x is within the minimum range from reference.x, then generate y so that it is at least min away from reference.y
-		if (new Range(referencePosition.x - min, referencePosition.x + min).contains(x)) {
-			y = referencePosition.y + (_.random(min, max) * Utils.getRandomSign());
-		}
-		// Otherwise, generate y across the entire range.
-		else {
-			y = _.random(referencePosition.y - max, referencePosition.y + max);
-		}
-		
+		// Parametric equation for a circle
+		var x = referencePosition.x + radius * Math.cos(angle),
+			y = referencePosition.y + radius * Math.sin(angle);
+			
 		return new Position(x, y);
 	};
 	
