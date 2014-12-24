@@ -14,20 +14,30 @@ define([
 	 * @param {Number} y The y coordinate. Optional; default 0.
 	 */
 	function Position(x, y) {
+		// Copy constructor if x is a Position
+		if (x instanceof Position) {
+			this.x = x.x;
+			this.y = x.y;
+			
+			return;
+		}
+		
 		this.x = x || 0;
 		this.y = y || 0;
 	}
+	
+	Position.prototype.move = function(velocity) {
+		this.x += velocity.x;
+		this.y += velocity.y;
+		
+		return this;
+	};
 	
 	Position.prototype.getDelta = function(position) {
 		return {
 			x: position.x - this.x,
 			y: position.y - this.y
 		};
-	};
-	
-	Position.prototype.applyDelta = function(velocity) {
-		this.x += velocity.x;
-		this.y += velocity.y;
 	};
 	
 	Position.prototype.toString = function() {

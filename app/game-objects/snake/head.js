@@ -29,10 +29,38 @@ define([
 	// Extend GameObject
 	_.extend(Head.prototype, GameObject.prototype);
 	
+	Head.prototype.spawn = function(position) {
+		var unit = Config.unit + Config.spacing;
+		this.setPosition(position);
+		
+		// Randomly determine head rotation and return a velocity that respresents the body's growth direction.
+		switch (_.random(1, 4)) {
+			// Facing right
+			case 1:
+				this.rotation = rotationRight;
+				return new Velocity(-unit, 0);
+				
+			// Facing right
+			case 2:
+				this.rotation = rotationLeft;
+				return new Velocity(unit, 0);
+				
+			// Facing right
+			case 3:
+				this.rotation = rotationUp;
+				return new Velocity(0, unit);
+				
+			// Facing right
+			case 4:
+				this.rotation = rotationDown;
+				return new Velocity(0, -unit);
+		}
+	};
+	
 	Head.prototype.setPosition = function(position) {
 		var delta = this.positions[0].getDelta(position);
 		
-		applyDelta(this, delta);
+		move(this, delta);
 	
 		return this;
 	};
@@ -42,7 +70,7 @@ define([
 	};
 	
 	Head.prototype.move = function() {
-		applyDelta(this, this.velocity);
+		move(this, this.velocity);
 	
 		return this;
 	};
@@ -120,13 +148,13 @@ define([
 		return new BoundingBox(new Position(leftX, topY), rightX - leftX, bottomY - topY);
 	};
 	
-	function applyDelta(head, delta) {
+	function move(head, delta) {
 		head.positions.forEach(function(position) {
-			position.applyDelta(delta);
+			position.move(delta);
 		});
 	
 		if (head.boundingBox) {
-			head.boundingBox.position.applyDelta(delta);
+			head.boundingBox.position.move(delta);
 		}
 	}
 	

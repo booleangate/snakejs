@@ -9,8 +9,8 @@ define([
 	
 	var unit = Config.unit;
 	
-	function Body() {
-		
+	function Body(position) {
+		this.position = position;
 	}
 	
 	// Extend GameObject
