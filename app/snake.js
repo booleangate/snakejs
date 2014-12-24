@@ -3,13 +3,14 @@ require([
 	"underscore",
 	"config", 
 	"utils/position",
+	"utils/velocity",
 	"utils/audio-library",
 	"game-objects/snake", 
 	"game-objects/apple",
 	"game-objects/draw-helpers/background",
 	"game-objects/draw-helpers/caption",
 	"game-objects/draw-helpers/score",
-], function($, _, Config, Position, AudioLibrary, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
+], function($, _, Config, Position, Velocity, AudioLibrary, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
 	"use strict";
 
 	var isNewGame = true, 
@@ -112,11 +113,11 @@ require([
 		apple.draw(ctx);
 		snake.draw(ctx);
 		
+		snake.move();
+		
 		// Check collisions
 		// TODO
 		
-		return;
-
 		setTimeout(function() {
 			requestAnimationFrame(stepActive, ctx);
 		}, speed);
@@ -180,14 +181,27 @@ require([
 		
 		// Capture keyboard input.
 		$("body").keydown(function(e) {
-			var velocity = false;
+			var newVelocity = false,
+				rotation, currentVelocity;
 	
 			switch (event.keyCode) {
 				// Arrow keys
-				case 37: velocity = new Velocity(-Config.unit, 0); break; // Left
-				case 38: velocity = new Velocity(0, -Config.unit); break; // Up
-				case 39: velocity = new Velocity(Config.unit, 0);  break; // Right
-				case 40: velocity = new Velocity(0, Config.unit);  break; // Down
+				case 37: // Left
+					newVelocity = new Velocity(-Config.unit, 0);
+					rotation = Config.rotation.left;
+					break;
+				case 38: // Up
+					newVelocity = new Velocity(0, -Config.unit);
+					rotation = Config.rotation.up;
+					break;
+				case 39: // Right
+					newVelocity = new Velocity(Config.unit, 0);
+					rotation = Config.rotation.right;
+					break;
+				case 40: // Down
+					newVelocity = new Velocity(0, Config.unit);
+					rotation = Config.rotation.down;
+					break;
 	
 				// Space
 				case 32:
@@ -205,19 +219,22 @@ require([
 			}
 	
 			// The game is not running, there is nothing to do.
-			if (isIdle() || !velocity) {
+			if (isIdle() || !newVelocity) {
 				return;
 			}
 	
 			// Don't allow the snake to reverse directions/double back by ensuring that the new velocity isn't the 
 			// opposite of the current velocity
-			if ((snake.velocity.x && velocity.x == -snake.velocity.x)
-				|| (snake.velocity.y && velocity.y == -snake.velocity.y)
+			currentVelocity = snake.getVelocity();
+			
+			if ((currentVelocity.x && newVelocity.x == -currentVelocity.x)
+				|| (currentVelocity.y && newVelocity.y == -currentVelocity.y)
 			) {
 				return;
 			}
 	
-			snake.velocity = velocity;
+			snake.head.setRotation(rotation);
+			snake.setVelocity(newVelocity);
 		});
 		
 		// Capture mouse clicks in the canvas.

@@ -26,7 +26,11 @@ define([
 	Snake.prototype.spawn = function(position) {
 		var bodyVelocity = this.head.spawn(position),
 			bodyPosition = new Position(position);
+			
+		// Reset the body.
+		this.body = [];
 		
+		// Create body segments.
 		for (var i = 0; i < Config.gameObjects.snake.initialSize; ++i) {
 			bodyPosition = new Position(bodyPosition).move(bodyVelocity);
 			this.body.push(new Body(bodyPosition));
@@ -64,6 +68,7 @@ define([
 	};
 	
 	Snake.prototype.move = function() {
+		this.head.move();
 		// The last peice of the body become the first piece.
 		// TODO
 		

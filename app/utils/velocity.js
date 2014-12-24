@@ -11,6 +11,14 @@ define(function() {
 	 * @param {Number} yVelocity The y axis velocity. Optional; default 0.
 	 */
 	function Velocity(xVelocity, yVelocity) {
+		// Copy constructor
+		if (xVelocity instanceof Velocity) {
+			this.x = xVelocity.x;
+			this.y = xVelocity.y;
+			
+			return;
+		}
+		
 		this.x = xVelocity || 0;
 		this.y = yVelocity || 0;
 	}

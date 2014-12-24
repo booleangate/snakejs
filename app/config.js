@@ -42,6 +42,13 @@ define(function() {
 		unit: unitSize,
 		spacing: 1,
 		lineWidth: 1,
-		defaultGameSpeed: 1000 / 12 // 12 frames a second
+		defaultGameSpeed: 1000 / 12, // 12 frames a second
+		
+		rotation: {
+			right: 0,
+			down: 0.5,
+			left: 1,
+			up: 1.5
+		}
 	};
 });

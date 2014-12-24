@@ -8,11 +8,7 @@ define([
 ], function(_, Config, GameObject, Position, Velocity, BoundingBox) {
 	"use strict";
 	
-	var rotationRight = 0,
-		rotationLeft = 1,
-		rotationUp = 1.5,
-		rotationDown = 0.5,
-		unit = Config.unit,
+	var unit = Config.unit,
 		spacing = Config.spacing;
 		
 	function Head() {
@@ -23,38 +19,48 @@ define([
 		];
 		this.velocity = new Velocity();
 		this.boundingBox = null;
-		this.rotation = rotationRight;
+		this.rotation = Config.rotation.right;
 	}
 	
 	// Extend GameObject
 	_.extend(Head.prototype, GameObject.prototype);
 	
 	Head.prototype.spawn = function(position) {
-		var unit = Config.unit + Config.spacing;
+		var unit = Config.unit + Config.spacing,
+			velocity;
+		
 		this.setPosition(position);
 		
 		// Randomly determine head rotation and return a velocity that respresents the body's growth direction.
 		switch (_.random(1, 4)) {
 			// Facing right
 			case 1:
-				this.rotation = rotationRight;
-				return new Velocity(-unit, 0);
+				this.rotation = Config.rotation.right;
+				velocity = new Velocity(-unit, 0);
+				break;
 				
 			// Facing right
 			case 2:
-				this.rotation = rotationLeft;
-				return new Velocity(unit, 0);
+				this.rotation = Config.rotation.left;
+				velocity = new Velocity(unit, 0);
+				break;
 				
 			// Facing right
 			case 3:
-				this.rotation = rotationUp;
-				return new Velocity(0, unit);
+				this.rotation = Config.rotation.up;
+				velocity = new Velocity(0, unit);
+				break;
 				
 			// Facing right
 			case 4:
-				this.rotation = rotationDown;
-				return new Velocity(0, -unit);
+				this.rotation = Config.rotation.down;
+				velocity = new Velocity(0, -unit);
+				break;
 		}
+		
+		this.setVelocity(new Velocity(velocity).invert());
+		
+		return velocity;
 	};
 	
 	Head.prototype.setPosition = function(position) {
@@ -67,6 +73,10 @@ define([
 	
 	Head.prototype.getPosition = function() {
 		return this.positions[0];
+	};
+	
+	Head.prototype.setRotation = function(rotation) {
+		this.rotation = rotation;
 	};
 	
 	Head.prototype.move = function() {
@@ -95,10 +105,10 @@ define([
 
 		// Rotate the object within its bounding box, not on its first point
 		switch (this.rotation) {
-			case rotationRight: ctx.translate(originalPosition.x + spacing, originalPosition.y); break;
-			case rotationLeft:  ctx.translate(originalPosition.x + unit - spacing, originalPosition.y + unit); break;
-			case rotationUp:    ctx.translate(originalPosition.x, originalPosition.y + unit - spacing); break;
-			case rotationDown:  ctx.translate(originalPosition.x + unit, originalPosition.y + spacing); break;
+			case Config.rotation.right: ctx.translate(originalPosition.x + spacing, originalPosition.y); break;
+			case Config.rotation.left:  ctx.translate(originalPosition.x + unit - spacing, originalPosition.y + unit); break;
+			case Config.rotation.up:    ctx.translate(originalPosition.x, originalPosition.y + unit - spacing); break;
+			case Config.rotation.down:  ctx.translate(originalPosition.x + unit, originalPosition.y + spacing); break;
 		}
 
 		// Move to origin.
