@@ -145,7 +145,7 @@ require([
 	function isLegalApplePosition(apple) {
 		var position = apple.getPosition(),
 			spacing = Config.spacing;
-		
+			
 		// Apple is above or to the left of the screen.
 		if (position.x <= spacing || position.y <= spacing) {
 			return false;
@@ -154,8 +154,15 @@ require([
 		else if (position.x + spacing + apple.getWidth() > screenWidth || position.y + spacing + apple.getHeight() > screenHeight) {
 			return false;
 		}
+		// Apple is already colliding with snake head
+		else if (snake.isColliding(apple)) {
+			return false;
+		}
 		
-		return true;
+		// If the body is colliding with the apple, return false (illegal position); otherwise, return true (legal position).
+		return !_.some(snake.body, function(body) {
+			return body.isColliding(apple);
+		});
 	}
 	
 	function isIdle() {
