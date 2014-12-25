@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "Snake game",
   "main": "server.js",
-  "web": "server.js",
   "directories": {
     "test": "tests"
   },
@@ -31,5 +30,8 @@
   "bugs": {
     "url": "https://github.com/booleangate/snakejs/issues"
   },
-  "homepage": "https://github.com/booleangate/snakejs"
+  "homepage": "https://github.com/booleangate/snakejs",
+  "engines": {
+    "node": "0.10.x"
+  }
 }
