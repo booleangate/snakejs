@@ -121,13 +121,8 @@ require([
 			moveApple();
 			updateSpeed();
 		}
-		// Collision 2: snake eats itself
-		else if (snake.isColliding(snake)) {
-			gameOver();
-			return;
-		}
-		// Collision 3: snake hits the wall
-		else if (false && isCollidingWithWall(snake)) {
+		// Collision 2 and 3: snake eats itself or snake hits the wall.
+		else if (snake.isColliding(snake) || isSnakeCollidingWithWall()) {
 			gameOver();
 			return;
 		}
@@ -141,6 +136,21 @@ require([
 		do {
 			apple.spawn(snake);
 		} while (!isLegalApplePosition(apple));
+	}
+	
+	function updateSpeed() {
+		var fps = Config.fps,
+			scaler = score <= 100 ? fps.scoreScalerBase : fps.scoreScalerPro;
+			
+		speed = 1000 / (fps.starting + (score * scaler));
+	}
+	
+	function isIdle() {
+		return isNewGame || isPaused || isGameOver;
+	}
+	
+	function isActive() {
+		return !isIdle();
 	}
 	
 	/*
@@ -169,19 +179,19 @@ require([
 		});
 	}
 	
-	function updateSpeed() {
-		var fps = Config.fps,
-			scaler = score <= 100 ? fps.scoreScalerBase : fps.scoreScalerPro;
-			
-		speed = 1000 / (fps.starting + (score * scaler));
-	}
-	
-	function isIdle() {
-		return isNewGame || isPaused || isGameOver;
-	}
-	
-	function isActive() {
-		return !isIdle();
+	function isSnakeCollidingWithWall() {
+		// Get the bounding box of the snake (this is just its head)
+		var boundingBox = snake.getBoundingBox(),
+			position = boundingBox.position;
+		
+		// Left border.
+		return position.x < 0
+			// Top border. 
+			|| position.y < 0
+			// Right border.
+			|| position.x + boundingBox.width > screenWidth
+			// Bottom border.
+			|| position.y + boundingBox.height > screenHeight;
 	}
 	
 	/**
