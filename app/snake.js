@@ -17,11 +17,11 @@ require([
 		isPaused = false,
 		isGameOver = false,
 		score = 0,
-		speed = Config.defaultGameSpeed,
 		apple = new Apple(),
 		snake = new Snake(),
 		audioLibrary = new AudioLibrary(),
 		ctx,
+		speed,
 		screenWidth,
 		screenHeight;
 	
@@ -34,6 +34,7 @@ require([
 		isPaused = false;
 		isGameOver = false;
 		score = 0;
+		updateSpeed();
 		
 		// Stop all audio.
 		audioLibrary.stop();
@@ -117,6 +118,7 @@ require([
 			audioLibrary.playForScore(score);
 			snake.grow();
 			moveApple();
+			updateSpeed();
 		}
 		// Collision 2: snake eats itself
 		else if (false) {
@@ -126,7 +128,6 @@ require([
 		else if (false) {
 			
 		}
-		
 		
 		setTimeout(function() {
 			requestAnimationFrame(stepActive, ctx);
@@ -163,6 +164,13 @@ require([
 		return !_.some(snake.body, function(body) {
 			return body.isColliding(apple);
 		});
+	}
+	
+	function updateSpeed() {
+		var fps = Config.fps,
+			scaler = score <= 100 ? fps.scoreScalerBase : fps.scoreScalerPro;
+			
+		speed = 1000 / (fps.starting + (score * scaler));
 	}
 	
 	function isIdle() {
