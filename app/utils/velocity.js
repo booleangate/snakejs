@@ -97,8 +97,7 @@ define(function() {
 	}
 	
 	function isOppositeDirection(d1, d2) {
-		// TODO
-		return false;
+		return Math.min(d1, d2) < 0 && Math.max(d1, d2) > 0;
 	}
 	
 	return Velocity;	
