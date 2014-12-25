@@ -1,10 +1,8 @@
 define([
+	"underscore",
 	"config",
-	"game-objects/game-object",
-	"utils/position",
-	"utils/velocity",
-	"utils/bounding-box"
-], function(Config, GameObject, Position, Velocity, BoundingBox) {
+	"game-objects/game-object"
+], function(_, Config, GameObject) {
 	"use strict";
 	
 	var unit = Config.unit;

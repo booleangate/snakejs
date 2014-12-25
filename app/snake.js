@@ -9,7 +9,7 @@ require([
 	"game-objects/apple",
 	"game-objects/draw-helpers/background",
 	"game-objects/draw-helpers/caption",
-	"game-objects/draw-helpers/score",
+	"game-objects/draw-helpers/score"
 ], function($, _, Config, Position, Velocity, AudioLibrary, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
 	"use strict";
 
@@ -218,7 +218,7 @@ require([
 		});
 		
 		// Capture keyboard input.
-		$("body").keydown(function(e) {
+		$("body").keydown(function(event) {
 			var newVelocity = false,
 				unit = Config.unit + Config.spacing,
 				rotation;
@@ -249,6 +249,7 @@ require([
 					} else {
 						activate();
 					}
+					return;
 					
 				// Ignore all other input
 				default:
@@ -279,7 +280,7 @@ require([
 			
 			pause();
 			
-			if (confirm("Are you sure you want to reset the game?")) {
+			if (window.confirm("Are you sure you want to reset the game?")) {
 				newGame();
 			}
 		});

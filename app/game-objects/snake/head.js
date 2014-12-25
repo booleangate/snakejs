@@ -116,7 +116,7 @@ define([
 		ctx.lineWidth = Config.lineWidth;
 	
 		_.each(this.positions, function(p, i) {
-			if (i == 0) {
+			if (i === 0) {
 				ctx.moveTo(p.x, p.y);
 			} else {
 				ctx.lineTo(p.x, p.y);
@@ -135,21 +135,32 @@ define([
 	};
 		
 	function calculateBoundingBox(positions) {
-		var leftX   = null,
-			rightX  = null,
-			topY    = null,
+		var leftX = null,
+			rightX = null,
+			topY = null,
 			bottomY = null;
 	
 		// Calculate the bounding box of this object by finding its extremes
 		_.each(positions, function(value) {
-			if (leftX === null   || value.x < leftX)   leftX   = value.x;
-			if (rightX === null  || value.x > rightX)  rightX  = value.x;
-			if (topY === null    || value.y < topY)    topY    = value.y;
-			if (bottomY === null || value.y > bottomY) bottomY = value.y;
+			if (leftX === null || value.x < leftX) {
+				leftX = value.x;
+			}
+			
+			if (rightX === null || value.x > rightX) {
+				rightX = value.x;
+			}
+			
+			if (topY === null || value.y < topY) {
+				topY = value.y;
+			}
+			
+			if (bottomY === null || value.y > bottomY) {
+				bottomY = value.y;
+			}
 		});
 	
 		return new BoundingBox(new Position(leftX, topY), rightX - leftX, bottomY - topY);
-	};
+	}
 
 	/**
 	 * Move the entire head by applying the delta to all positions as well as the bounding box.

@@ -2,10 +2,8 @@ define([
 	"underscore",
 	"config",
 	"game-objects/game-object",
-	"utils/position",
-	"utils/velocity",
-	"utils/bounding-box"
-], function(_, Config, GameObject, Position, Velocity, BoundingBox) {
+	"utils/position"
+], function(_, Config, GameObject, Position) {
 	"use strict";
 	
 	var radius = (Config.unit + Config.spacing) / 2;
@@ -36,7 +34,7 @@ define([
 		this.position = position;
 		this.position.x += radius;
 		this.position.y += radius;
-		 
+		
 		return this;
 	};
 	
@@ -53,7 +51,7 @@ define([
 		ctx.arc(this.position.x, this.position.y, radius, 0, Math.PI * 2);
 		ctx.fill();
 		ctx.closePath();
-		 
+		
 		return this;
 	};
 	

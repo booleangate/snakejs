@@ -60,7 +60,7 @@ define([
  	 * @param {Context} ctx The canvas context.
  	 * @return {GameObject} Should always `return this` for chaining.
 	 */
-	GameObject.prototype.draw = function(ctx) {
+	GameObject.prototype.draw = function(/*ctx*/) {
 		throw getClassName(this) + ".draw() is not implemented.";
 	};
 	

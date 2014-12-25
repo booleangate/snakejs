@@ -8,11 +8,8 @@ define([
 	"game-objects/snake/head",
 	"game-objects/snake/body",
 	"game-objects/game-object",
-	"utils/position",
-	"utils/velocity",
-	"utils/bounding-box",
-	"utils/utils"
-], function(_, Config, Head, Body, GameObject, Position, Velocity, BoundingBox, Utils) {
+	"utils/position"
+], function(_, Config, Head, Body, GameObject, Position) {
 	"use strict";
 	
 	function Snake() {

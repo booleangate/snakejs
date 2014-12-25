@@ -2,10 +2,8 @@
  * A simple Cartesian coordinate point.
  */
 define([
-	"underscore",
-	"utils/utils",
-	"utils/range"
-], function(_, Utils, Range) {
+	"underscore"
+], function(_) {
 	"use strict";
 	
 	/**
