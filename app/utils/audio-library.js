@@ -82,7 +82,7 @@ define([
 		if (isMuted) {
 			this.pause();
 		} else {
-			this.play();
+			this.resume();
 		}
 	};
 	
