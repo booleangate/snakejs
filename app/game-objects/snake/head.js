@@ -18,13 +18,17 @@ define([
 			new Position(0, unit )
 		];
 		this.velocity = new Velocity();
-		this.boundingBox = null;
+		this.boundingBox = calculateBoundingBox(this.positions);
 		this.rotation = Config.rotation.right;
 	}
 	
 	// Extend GameObject
 	_.extend(Head.prototype, GameObject.prototype);
 	
+	/**
+	 * Create the head at the specified position with a random rotation.  Return a velocity that will be used as an offset to create the body. 
+     * @param {Position} position
+	 */
 	Head.prototype.spawn = function(position) {
 		var velocity;
 		
@@ -63,11 +67,7 @@ define([
 	};
 	
 	Head.prototype.setPosition = function(position) {
-		var delta = this.positions[0].getDelta(position);
-		
-		move(this, delta);
-	
-		return this;
+		return move(this, this.positions[0].getDelta(position));
 	};
 	
 	Head.prototype.getPosition = function() {
@@ -79,16 +79,10 @@ define([
 	};
 	
 	Head.prototype.move = function() {
-		move(this, this.velocity);
-	
-		return this;
+		return move(this, this.velocity);
 	};
 	
 	Head.prototype.getBoundingBox = function() {
-		if (!this.boundingBox) {
-			this.boundingBox = calculateBoundingBox(this.positions);
-		}
-		
 		return this.boundingBox;
 	};
 	
@@ -156,15 +150,22 @@ define([
 	
 		return new BoundingBox(new Position(leftX, topY), rightX - leftX, bottomY - topY);
 	};
-	
+
+	/**
+	 * Move the entire head by applying the delta to all positions as well as the bounding box.
+	 * 
+	 * @param {Head} head
+	 * @param {Velocity} delta
+	 * @return {Head}
+	 */	
 	function move(head, delta) {
 		head.positions.forEach(function(position) {
 			position.move(delta);
 		});
 	
-		if (head.boundingBox) {
-			head.boundingBox.position.move(delta);
-		}
+		head.boundingBox.move(delta);
+		
+		return head;
 	}
 	
 	return Head;

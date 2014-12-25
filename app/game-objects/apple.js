@@ -43,11 +43,7 @@ define([
 	 * Get the position of the top left corner of the bounding box of the apple.
 	 */
 	Apple.prototype.getPosition = function() {
-		var position = _.clone(this.position);
-		position.x -= radius;
-		position.y -= radius;
-		 
-		return position;
+		return new Position(this.position.x - radius, this.position.y - radius);
 	};
 	
 	Apple.prototype.draw = function(ctx) {

@@ -3,8 +3,23 @@ define([
 ],function(Range) {
 	"use strict";
 	
+	function BoundingBox(position, width, height) {
+		this.position = position;
+		this.width = width;
+		this.height = height;
+		
+		this.rangeX = new Range(position.x, position.x + width);
+		this.rangeY = new Range(position.y, position.y + width);
+	}
+	
 	BoundingBox.prototype.setPosition = function(position) {
 		this.position = position;
+		
+		return updateRanges(this);
+	};
+	
+	BoundingBox.prototype.move = function(velocity) {
+		this.position.move(velocity);
 		
 		return updateRanges(this);
 	};
@@ -28,7 +43,10 @@ define([
 	 * @return bool
 	 */
 	BoundingBox.prototype.isColliding = function(other) {
-		return this.rangeX.intersects(other.rangeX) && this.rangeY.intersects(other.rangeY);
+		var isCollidingX = this.rangeX.intersects(other.rangeX),
+			isCollidingY = this.rangeY.intersects(other.rangeY);
+			
+		return isCollidingX && isCollidingY;
 	};
 	
 	BoundingBox.prototype.toString = function() {
@@ -42,15 +60,6 @@ define([
 		boundingBox.rangeY.update(pos.y, pos.y + boundingBox.height);
 		
 		return boundingBox;
-	}
-	
-	function BoundingBox(position, width, height) {
-		this.position = position;
-		this.width = width;
-		this.height = height;
-		
-		this.rangeX = new Range(position.x, position.x + width);
-		this.rangeY = new Range(position.y, position.y + width);
 	}
 	
 	return BoundingBox;

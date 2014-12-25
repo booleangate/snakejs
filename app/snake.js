@@ -79,7 +79,7 @@ require([
 	 * Draw appropriate idle screen.
 	 */
 	function stepIdle() {
-		// drawBackgorund(ctx, screenWidth, screenHeight);
+		drawBackgorund(ctx, screenWidth, screenHeight);
 
 		if (isNewGame) {
 			drawCaption(ctx, "Snake-a-snake!", ["Use the arrow keys to guide the snake to collect apples.", "Press space to begin."]);
@@ -103,20 +103,29 @@ require([
 		
 		drawBackgorund(ctx, screenWidth, screenHeight);
 		
-		// Draw score
-		drawScore(ctx, score, screenWidth);
-		
-		// Move objects
-		// TODO
+		// Move the snake		
+		snake.move();
 		
 		// Draw game objects
 		apple.draw(ctx);
 		snake.draw(ctx);
+		drawScore(ctx, score, screenWidth);
 		
-		snake.move();
+		// Collision 1: snake eats an apple
+		if (snake.isColliding(apple)) {
+			++score;
+			audioLibrary.playForScore(score);
+			moveApple();
+		}
+		// Collision 2: snake eats itself
+		else if (false) {
+			
+		}
+		// Collision 3: snake hits the wall
+		else if (false) {
+			
+		}
 		
-		// Check collisions
-		// TODO
 		
 		setTimeout(function() {
 			requestAnimationFrame(stepActive, ctx);
@@ -183,7 +192,7 @@ require([
 		$("body").keydown(function(e) {
 			var newVelocity = false,
 				unit = Config.unit + Config.spacing,
-				rotation, currentVelocity;
+				rotation;
 	
 			switch (event.keyCode) {
 				// Arrow keys
@@ -212,8 +221,6 @@ require([
 						activate();
 					}
 					
-					return;
-	
 				// Ignore all other input
 				default:
 					return;
@@ -225,12 +232,8 @@ require([
 			}
 	
 			// Don't allow the snake to reverse directions/double back by ensuring that the new velocity isn't the 
-			// opposite of the current velocity
-			currentVelocity = snake.getVelocity();
-			
-			if ((currentVelocity.x && newVelocity.x == -currentVelocity.x)
-				|| (currentVelocity.y && newVelocity.y == -currentVelocity.y)
-			) {
+			// opposite of the current velocity.
+			if (snake.getVelocity().isSameDirection(newVelocity)) {
 				return;
 			}
 	
@@ -269,6 +272,6 @@ require([
 		$(canvas).css("display", "block");
 				
 		// Start the game.
-		activate();
+		newGame();
 	});
 });

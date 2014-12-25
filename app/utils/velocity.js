@@ -52,6 +52,16 @@ define(function() {
 	};
 
 	/**
+	 * Determine whether or not `this` velocity is in the same direction as `other`.
+	 * 
+	 * @param {Velocity} other
+	 * @return {bool} 
+	 */	
+	Velocity.prototype.isSameDirection = function(other) {
+		return isSameDirection(this.x, other.x) && isSameDirection(this.y, other.y);
+	};
+
+	/**
 	 * Increase (percent > 0) or decrease (percent < 0) the velocity on both axes.
 	 *  
  	 * @param {Number} percent Percentage as a decimal (where 1 = 100%).
@@ -62,6 +72,19 @@ define(function() {
 		
 		return this;
 	};
+	
+	/**
+	 * Determines whether or not d1 and d2 are both zero, both positive, or both negative.
+	 * 
+	 * @param {Number} d1
+	 * @param {Number} d2
+	 * @return bool
+	 */
+	function isSameDirection(d1, d2) {
+		return (d1 === 0 && d2 === 0) ||
+			(d1 < 0 && d2 < 0) ||
+			(d1 > 0 && d2 > 0); 
+	}
 	
 	return Velocity;	
 });
