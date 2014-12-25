@@ -33,8 +33,6 @@ require([
 		isNewGame = true;
 		isPaused = false;
 		isGameOver = false;
-		score = 0;
-		updateSpeed();
 		
 		// Stop all audio.
 		audioLibrary.stop();
@@ -49,8 +47,10 @@ require([
 			var quarterHeight = Math.floor(screenHeight / 4);
 			var position = Position.getRandom(quarterWidth, quarterWidth * 3, quarterHeight, quarterHeight * 3);
 			
+			score = 0;
 			snake.spawn(position);
 			moveApple();
+			updateSpeed();
 		}
 		
 		isNewGame = isPaused = isGameOver = false;
@@ -86,8 +86,9 @@ require([
 			drawCaption(ctx, "Snake-a-snake!", ["Use the arrow keys to guide the snake to collect apples.", "Press space to begin."]);
 		}
 		else if (isGameOver) {
+			var insult = "TODO";
 			drawCaption(ctx, "Game over!", ["You scored " + score + " points. " + insult, "Press space to start a new game."]);
-			score = 0;
+			isNewGame = true;
 		}
 		else if (isPaused) {
 			drawCaption(ctx, "Paused", "Press space to continue");
@@ -121,12 +122,14 @@ require([
 			updateSpeed();
 		}
 		// Collision 2: snake eats itself
-		else if (false) {
-			
+		else if (snake.isColliding(snake)) {
+			gameOver();
+			return;
 		}
 		// Collision 3: snake hits the wall
-		else if (false) {
-			
+		else if (false && isCollidingWithWall(snake)) {
+			gameOver();
+			return;
 		}
 		
 		setTimeout(function() {
