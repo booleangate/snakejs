@@ -83,7 +83,10 @@ define([
 		// Clone the end of the body and add it at the end.  This way, when the snake moves again,
 		// one tail piece will be moved to the front, but the clone will remain at the end in the 
 		// same place giving us that "growing" effect.
-		// TODO
+		var tailPosition = new Position(this.body[this.body.length - 1].getPosition()),
+			tail = new Body(tailPosition);
+			
+		this.body.push(tail);
 	};
 	
 	Snake.prototype.draw = function(ctx) {
