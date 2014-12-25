@@ -115,6 +115,7 @@ require([
 		if (snake.isColliding(apple)) {
 			++score;
 			audioLibrary.playForScore(score);
+			snake.grow();
 			moveApple();
 		}
 		// Collision 2: snake eats itself

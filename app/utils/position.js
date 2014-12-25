@@ -91,5 +91,21 @@ define([
 		return new Position(x, y);
 	};
 	
+	/**
+	 * Snap a point to a grid that has cells of size gridCellSize.  Returns a new Position instance (does not modify `position` argument).
+	 * 
+	 * @param {Position} position
+	 * @param {Number} gridCellSize
+	 * @return Position
+	 */
+	Position.getGridSnapped = function(position, gridCellSize) {
+		var snappedPosition = new Position(position);
+		
+		snappedPosition.x = Math.floor(snappedPosition.x / gridCellSize) * gridCellSize;
+		snappedPosition.y = Math.floor(snappedPosition.y / gridCellSize) * gridCellSize;
+		
+		return snappedPosition;
+	};
+	
 	return Position;	
 });

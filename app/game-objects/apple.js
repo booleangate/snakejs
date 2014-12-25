@@ -19,9 +19,10 @@ define([
 	
 	Apple.prototype.spawn = function(snake) {
 		var min = Config.gameObjects.apple.spawnDistance.min, 
-			max = Config.gameObjects.apple.spawnDistance.max;
+			max = Config.gameObjects.apple.spawnDistance.max,
+			position = Position.getRandomFromReference(snake.getPosition(), min, max);
 			
-		this.setPosition(Position.getRandomFromReference(snake.getPosition(), min, max));
+		this.setPosition(Position.getGridSnapped(position, sideSize));
 		
 		return this;
 	};
