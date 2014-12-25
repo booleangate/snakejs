@@ -5,12 +5,13 @@ require([
 	"utils/position",
 	"utils/velocity",
 	"utils/audio-library",
+	"utils/bag",
 	"game-objects/snake", 
 	"game-objects/apple",
 	"game-objects/draw-helpers/background",
 	"game-objects/draw-helpers/caption",
 	"game-objects/draw-helpers/score"
-], function($, _, Config, Position, Velocity, AudioLibrary, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
+], function($, _, Config, Position, Velocity, AudioLibrary, Bag, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
 	"use strict";
 
 	var isNewGame = true, 
@@ -20,6 +21,7 @@ require([
 		apple = new Apple(),
 		snake = new Snake(),
 		audioLibrary = new AudioLibrary(),
+		insults = new Bag(Config.insults),
 		ctx,
 		speed,
 		screenWidth,
@@ -86,8 +88,7 @@ require([
 			drawCaption(ctx, "Snake-a-snake!", ["Use the arrow keys to guide the snake to collect apples.", "Press space to begin."]);
 		}
 		else if (isGameOver) {
-			var insult = "TODO";
-			drawCaption(ctx, "Game over!", ["You scored " + score + " points. " + insult, "Press space to start a new game."]);
+			drawCaption(ctx, "Game over!", ["You scored " + score + " points. " + insults.get(), "Press space to start a new game."]);
 			isNewGame = true;
 		}
 		else if (isPaused) {
@@ -262,8 +263,8 @@ require([
 			}
 	
 			// Don't allow the snake to reverse directions/double back by ensuring that the new velocity isn't the 
-			// opposite of the current velocity.
-			if (snake.getVelocity().isSameDirection(newVelocity)) {
+			// opposite of the current velocity. 
+			if (snake.getVelocity().isOppositeDirection(newVelocity)) {
 				return;
 			}
 	

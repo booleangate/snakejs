@@ -62,6 +62,16 @@ define(function() {
 	};
 
 	/**
+	 * Determine whether or not `this` velocity is in the same direction as `other`.
+	 * 
+	 * @param {Velocity} other
+	 * @return {bool} 
+	 */	
+	Velocity.prototype.isOppositeDirection = function(other) {
+		return isOppositeDirection(this.x, other.x) ^ isOppositeDirection(this.y, other.y);
+	};
+
+	/**
 	 * Increase (percent > 0) or decrease (percent < 0) the velocity on both axes.
 	 *  
  	 * @param {Number} percent Percentage as a decimal (where 1 = 100%).
@@ -84,6 +94,11 @@ define(function() {
 		return (d1 === 0 && d2 === 0) ||
 			(d1 < 0 && d2 < 0) ||
 			(d1 > 0 && d2 > 0); 
+	}
+	
+	function isOppositeDirection(d1, d2) {
+		// TODO
+		return false;
 	}
 	
 	return Velocity;	

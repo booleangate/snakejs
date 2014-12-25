@@ -54,6 +54,13 @@ define(function() {
 			starting: 9,
 			scoreScalerBase: 0.15,
 			scoreScalerPro: 0.10
-		}
+		},
+		
+		insults: [
+			"Try harder next time.",
+			"You have brought great dishonor upon your family.",
+			"One day you'll graduate to the big leagues.",
+			"Derp."
+       ]
 	};
 });
