@@ -82,7 +82,9 @@ require([
 	 * Draw appropriate idle screen.
 	 */
 	function stepIdle() {
-		drawBackgorund(ctx, screenWidth, screenHeight);
+		if (!isGameOver) {
+			drawBackgorund(ctx, screenWidth, screenHeight);
+		}
 
 		if (isNewGame) {
 			drawCaption(ctx, "Snake-a-snake!", ["Use the arrow keys to guide the snake to collect apples.", "Press space to begin."]);
