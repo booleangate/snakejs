@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Snake game",
   "main": "server.js",
+  "web": "server.js",
   "directories": {
     "test": "tests"
   },
