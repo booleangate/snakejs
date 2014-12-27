@@ -15,6 +15,7 @@ define([
 	function Snake() {
 		this.head = new Head();
 		this.body = [];
+		this.isLastVelocityChangeComplete = true;
 	}
 	
 	// Extend GameObject
@@ -54,6 +55,14 @@ define([
 	 * Proxy for head velocity.
 	 */	
 	Snake.prototype.setVelocity = function(velocity) {
+		// If the last velocity change has not actually been carried out in this.move(), or the snake is trying
+		// to go in the opposite direction that it is already travelling, then ignore this velocity change.
+		if (!this.isLastVelocityChangeComplete || this.head.getVelocity().isOppositeDirection(velocity)) {
+			return this;
+		}
+		
+		this.isLastVelocityChangeComplete = false;
+		
 		return this.head.setVelocity(velocity);
 	};
 	
@@ -74,6 +83,8 @@ define([
 		
 		// Move the head in whatever direction it should be going.
 		this.head.move();
+		
+		this.isLastVelocityChangeComplete = true;
 	};
 	
 	Snake.prototype.grow = function() {

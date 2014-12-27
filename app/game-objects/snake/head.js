@@ -74,6 +74,21 @@ define([
 		return this.positions[0];
 	};
 	
+	Head.prototype.setVelocity = function(velocity) {
+		// Determine the new rotation
+		if (velocity.x < 0) {
+			this.setRotation(Config.rotation.left);
+		} else if (velocity.x > 0) {
+			this.setRotation(Config.rotation.right);
+		} else if (velocity.y < 0) {
+			this.setRotation(Config.rotation.up);
+		} else {
+			this.setRotation(Config.rotation.down);
+		}
+		
+		this.velocity = velocity;
+	};
+	
 	Head.prototype.setRotation = function(rotation) {
 		this.rotation = rotation;
 	};

@@ -222,55 +222,47 @@ require([
 		
 		// Capture keyboard input.
 		$("body").keydown(function(event) {
-			var newVelocity = false,
-				unit = Config.unit + Config.spacing,
-				rotation;
+			var unit = Config.unit + Config.spacing,
+				newVelocity;
 	
 			switch (event.keyCode) {
 				// Arrow keys
 				case 37: // Left
 					newVelocity = new Velocity(-unit, 0);
-					rotation = Config.rotation.left;
 					break;
+					
 				case 38: // Up
 					newVelocity = new Velocity(0, -unit);
-					rotation = Config.rotation.up;
 					break;
+					
 				case 39: // Right
 					newVelocity = new Velocity(unit, 0);
-					rotation = Config.rotation.right;
 					break;
+					
 				case 40: // Down
 					newVelocity = new Velocity(0, unit);
-					rotation = Config.rotation.down;
 					break;
 	
-				// Space
+				// Spacebar
 				case 32:
 					if (isActive()) {
 						pause();
 					} else {
 						activate();
 					}
+					
 					return;
 					
-				// Ignore all other input
+				// Ignore all other keyboard input
 				default:
 					return;
 			}
 	
 			// The game is not running, there is nothing to do.
-			if (isIdle() || !newVelocity) {
+			if (isIdle()) {
 				return;
 			}
 	
-			// Don't allow the snake to reverse directions/double back by ensuring that the new velocity isn't the 
-			// opposite of the current velocity. 
-			if (snake.getVelocity().isOppositeDirection(newVelocity)) {
-				return;
-			}
-	
-			snake.head.setRotation(rotation);
 			snake.setVelocity(newVelocity);
 		});
 		
