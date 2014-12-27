@@ -11,8 +11,9 @@ require([
 	"game-objects/apple",
 	"game-objects/draw-helpers/background",
 	"game-objects/draw-helpers/caption",
-	"game-objects/draw-helpers/score"
-], function($, _, Config, Position, Velocity, AudioLibrary, Bag, Utils, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
+	"game-objects/draw-helpers/score",
+	"requestAnimationFrame"
+], function($, _, Config, Position, Velocity, AudioLibrary, Bag, Utils, Snake, Apple, drawBackgorund, drawCaption, drawScore, requestAnimationFrame) {
 	"use strict";
 
 	var isNewGame = true, 
