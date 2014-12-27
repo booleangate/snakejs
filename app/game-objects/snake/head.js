@@ -71,7 +71,7 @@ define([
 	};
 	
 	Head.prototype.getPosition = function() {
-		return this.positions[0];
+		return this.boundingBox.position;
 	};
 	
 	Head.prototype.setVelocity = function(velocity) {
@@ -99,6 +99,14 @@ define([
 	
 	Head.prototype.getBoundingBox = function() {
 		return this.boundingBox;
+	};
+	
+	Head.prototype.getWidth = function() {
+		return this.boundingBox.width;
+	};
+	
+	Head.prototype.getHeight = function() {
+		return this.boundingBox.height;
 	};
 	
 	Head.prototype.draw = function(ctx) {

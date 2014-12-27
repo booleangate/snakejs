@@ -73,6 +73,14 @@ define([
 		return this.head.getVelocity();
 	};
 	
+	Snake.prototype.getWidth = function() {
+		return this.head.getWidth();
+	};
+	
+	Snake.prototype.getHeight = function() {
+		return this.head.getHeight();
+	};
+	
 	Snake.prototype.move = function() {
 		// The last peice of the body become the first piece.
 		var tail = this.body.pop();

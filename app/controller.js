@@ -6,12 +6,13 @@ require([
 	"utils/velocity",
 	"utils/audio-library",
 	"utils/bag",
+	"utils/utils",
 	"game-objects/snake", 
 	"game-objects/apple",
 	"game-objects/draw-helpers/background",
 	"game-objects/draw-helpers/caption",
 	"game-objects/draw-helpers/score"
-], function($, _, Config, Position, Velocity, AudioLibrary, Bag, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
+], function($, _, Config, Position, Velocity, AudioLibrary, Bag, Utils, Snake, Apple, drawBackgorund, drawCaption, drawScore) {
 	"use strict";
 
 	var isNewGame = true, 
@@ -108,15 +109,15 @@ require([
 		
 		drawBackgorund(ctx, screenWidth, screenHeight);
 		
-		// Move the snake		
+		// Move the snake.
 		snake.move();
 		
-		// Draw game objects
+		// Draw game objects.
 		apple.draw(ctx);
 		snake.draw(ctx);
 		drawScore(ctx, score, screenWidth);
 		
-		// Collision 1: snake eats an apple
+		// Collision 1: snake eats an apple.
 		if (snake.isColliding(apple)) {
 			++score;
 			audioLibrary.playForScore(score);
@@ -125,11 +126,12 @@ require([
 			updateSpeed();
 		}
 		// Collision 2 and 3: snake eats itself or snake hits the wall.
-		else if (snake.isColliding(snake) || isSnakeCollidingWithWall()) {
+		else if (snake.isColliding(snake) || Utils.isCollidingWithWall(snake, screenWidth, screenHeight)) {
 			gameOver();
 			return;
 		}
 		
+		// Trigger next frame.
 		setTimeout(function() {
 			requestAnimationFrame(stepActive, ctx);
 		}, speed);
@@ -138,7 +140,7 @@ require([
 	function moveApple() {
 		do {
 			apple.spawn(snake);
-		} while (!isLegalApplePosition(apple));
+		} while (!Utils.isLegalApplePosition(apple, snake, screenWidth, screenHeight));
 	}
 	
 	function updateSpeed() {
@@ -154,47 +156,6 @@ require([
 	
 	function isActive() {
 		return !isIdle();
-	}
-	
-	/*
-	 * Make sure the apple is completely within the
-	 */
-	function isLegalApplePosition(apple) {
-		var position = apple.getPosition(),
-			spacing = Config.spacing;
-			
-		// Apple is above or to the left of the screen.
-		if (position.x <= spacing || position.y <= spacing) {
-			return false;
-		}
-		// Apple is below or to the right of the screen.
-		else if (position.x + spacing + apple.getWidth() > screenWidth || position.y + spacing + apple.getHeight() > screenHeight) {
-			return false;
-		}
-		// Apple is already colliding with snake head
-		else if (snake.isColliding(apple)) {
-			return false;
-		}
-		
-		// If the body is colliding with the apple, return false (illegal position); otherwise, return true (legal position).
-		return !_.some(snake.body, function(body) {
-			return body.isColliding(apple);
-		});
-	}
-	
-	function isSnakeCollidingWithWall() {
-		// Get the bounding box of the snake (this is just its head)
-		var boundingBox = snake.getBoundingBox(),
-			position = boundingBox.position;
-		
-		// Left border.
-		return position.x < 0
-			// Top border. 
-			|| position.y < 0
-			// Right border.
-			|| position.x + boundingBox.width > screenWidth
-			// Bottom border.
-			|| position.y + boundingBox.height > screenHeight;
 	}
 	
 	/**
@@ -280,16 +241,12 @@ require([
 			}
 		});
 		
+		// Initialize audio tracks
+		audioLibrary.init();
+		
 		// Audio controls
 		$("#inp-enable-sounds").change(function() {
 			audioLibrary.mute(!this.checked);
-		});
-		
-		// Audio tracks.
-		$("audio").each(function(i, track) {
-			var loop = !!$(track).attr("loop");
-			
-			audioLibrary.addTrack(track, loop);
 		});
 
 		// Resize the game to match the window and show the canvas.

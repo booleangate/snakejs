@@ -1,3 +1,8 @@
+/**
+ * Simple manager for audio tracks.  Supports HTML attribute configuration for each audio entry:
+ *   loop: valueless but if set, the track will loop once it reaches the end.
+ *   start-time: the time at which to start the track in seconds.  
+ */
 define([
 	"underscore",
 	"jquery"
@@ -5,20 +10,28 @@ define([
 	"use strict";
 	
 	function AudioLibrary() {
-		this.tracks = [];
+		this.$tracks = $();
 		this.currentTrack = false;
 		this.isMuted = false;
 	}
 	
-	AudioLibrary.prototype.addTrack = function(track, loop) {
-		this.tracks.push(track);
+	function getStartTime(track) {
+		return $(track).attr("start-time") || 0;
+	}
+	
+	AudioLibrary.prototype.init = function(selector) {
+		var self = this;
 		
-		if (loop) {
-			$(track).on("ended", function() {
-				this.currentTime = 0;
-				this.play();
-			});
-		}
+		this.$tracks = this.$tracks.add($(selector || "audio").each(function(i, track) {
+			var hasLoop = typeof $(track).attr("loop") !== "undefined";
+			
+			if (hasLoop) {
+				$(track).on("ended", function() {
+					this.currentTime = 0;
+					this.play();
+				});
+			}
+		}));
 	};
 	
 	AudioLibrary.prototype.playForScore = function(score) {
@@ -26,7 +39,7 @@ define([
 		--score;
 		
 		// If the score index is not a valid track, do nothing.
-		if (score < 0 || score >= this.tracks.length) {
+		if (score < 0 || score >= this.$tracks.length) {
 			return;
 		}
 		// Already playing this track, do nothing.
@@ -43,7 +56,8 @@ define([
 		
 		// If not muted, play the track.
 		if (!this.isMuted) {
-			this.tracks[score].play();
+			this.$tracks[score].currentTime = getStartTime(this.$tracks[score]);
+			this.$tracks[score].play();
 		}
 	};
 	
@@ -54,7 +68,7 @@ define([
 		}
 		
 		this.pause();
-		this.tracks[this.currentTrack].currentTime = 0;
+		this.$tracks[this.currentTrack].currentTime = 0;
 		this.currentTrack = false;
 	};
 	
@@ -64,7 +78,7 @@ define([
 			return;
 		}
 		
-		this.tracks[this.currentTrack].pause();
+		this.$tracks[this.currentTrack].pause();
 	};
 	
 	AudioLibrary.prototype.resume = function() {
@@ -73,7 +87,7 @@ define([
 			return;
 		}
 		
-		this.tracks[this.currentTrack].play();
+		this.$tracks[this.currentTrack].play();
 	};
 	
 	AudioLibrary.prototype.mute = function(isMuted) {
