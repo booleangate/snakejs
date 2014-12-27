@@ -1,4 +1,7 @@
-define(["config"], function(Config) {
+define([
+	"underscore",
+	"config"
+], function(_, Config) {
 	"use strict";
 	
 	var Utils = {
@@ -6,11 +9,8 @@ define(["config"], function(Config) {
 		 * Make sure the apple is completely within the
 		 */
 		isLegalApplePosition: function(apple, snake, screenWidth, screenHeight) {
-			var position = apple.getPosition(),
-				spacing = Config.spacing;
-
 			// Apple is outside of the visible area			
-			if (Utils.isCollidingWithWall(apple, screenWidth, screenHeight, spacing)) {
+			if (Utils.isCollidingWithWall(apple, screenWidth, screenHeight, Config.spacing)) {
 				return false;
 			}
 			// Apple is already colliding with snake head

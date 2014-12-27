@@ -20,8 +20,6 @@ define([
 	}
 	
 	AudioLibrary.prototype.init = function(selector) {
-		var self = this;
-		
 		this.$tracks = this.$tracks.add($(selector || "audio").each(function(i, track) {
 			var hasLoop = typeof $(track).attr("loop") !== "undefined";
 			
