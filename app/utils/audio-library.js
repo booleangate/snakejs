@@ -40,8 +40,6 @@ define([
 	};
 	
 	AudioLibrary.prototype.playForScore = function(score) {
-		console.log("playForScore", score);
-		try {
 		// Make score an index.
 		--score;
 		
@@ -66,7 +64,6 @@ define([
 			this.$tracks[score].currentTime = getStartTime(this.$tracks[score]);
 			this.$tracks[score].play();
 		}
-		} catch(e) {console.warn(e);}
 	};
 	
 	AudioLibrary.prototype.stop = function() {
