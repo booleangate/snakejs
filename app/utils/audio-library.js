@@ -5,8 +5,9 @@
  */
 define([
 	"underscore",
-	"jquery"
-], function(_, $) {
+	"jquery",
+	"bowser"
+], function(_, $, bowser) {
 	"use strict";
 	
 	function AudioLibrary() {
@@ -23,6 +24,12 @@ define([
 		this.$tracks = this.$tracks.add($(selector || "audio").each(function(i, track) {
 			var hasLoop = typeof $(track).attr("loop") !== "undefined";
 			
+			// If this is Firefox, switch from mp3s to ogg.  Safari doesn't support ogg, so we can't just use 
+			// that format across the board.
+			if (bowser.firefox) {
+				track.src = track.src.replace(/\.mp3$/, ".ogg");
+			}
+			
 			if (hasLoop) {
 				$(track).on("ended", function() {
 					this.currentTime = 0;
@@ -33,6 +40,8 @@ define([
 	};
 	
 	AudioLibrary.prototype.playForScore = function(score) {
+		console.log("playForScore", score);
+		try {
 		// Make score an index.
 		--score;
 		
@@ -57,6 +66,7 @@ define([
 			this.$tracks[score].currentTime = getStartTime(this.$tracks[score]);
 			this.$tracks[score].play();
 		}
+		} catch(e) {console.warn(e);}
 	};
 	
 	AudioLibrary.prototype.stop = function() {
