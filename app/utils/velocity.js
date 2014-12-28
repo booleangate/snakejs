@@ -62,7 +62,7 @@ define(function() {
 	};
 
 	/**
-	 * Determine whether or not `this` velocity is in the same direction as `other`.
+	 * Determine whether or not `this` velocity is in the opposite direction as `other`.
 	 * 
 	 * @param {Velocity} other
 	 * @return {bool} 
@@ -96,8 +96,15 @@ define(function() {
 			(d1 > 0 && d2 > 0); 
 	}
 	
+	/**
+	 * Determines whether or not d1 and d2 (two values on the same axes) have opposite signs (one is  
+	 * negative and one is positive).
+	 * 
+	 * @param {Number} d1
+	 * @param {Number} d2
+	 */
 	function isOppositeDirection(d1, d2) {
-		return Math.min(d1, d2) < 0 && Math.max(d1, d2) > 0;
+		return !!(Math.min(d1, d2) < 0 && Math.max(d1, d2) > 0);
 	}
 	
 	return Velocity;	

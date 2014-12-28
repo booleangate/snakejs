@@ -15,7 +15,7 @@ define([
 	function Snake() {
 		this.head = new Head();
 		this.body = [];
-		this.isLastVelocityChangeComplete = true;
+		this.velocityChangeQueue = [];
 	}
 	
 	// Extend GameObject
@@ -25,8 +25,9 @@ define([
 		var bodyVelocity = this.head.spawn(position),
 			bodyPosition = new Position(position);
 			
-		// Reset the body.
+		// Reset the body and velocity change queue
 		this.body = [];
+		this.velocityChangeQueue = [];
 		
 		// Create body segments.
 		for (var i = 0; i < Config.gameObjects.snake.initialSize; ++i) {
@@ -55,15 +56,20 @@ define([
 	 * Proxy for head velocity.
 	 */	
 	Snake.prototype.setVelocity = function(velocity) {
-		// If the last velocity change has not actually been carried out in this.move(), or the snake is trying
-		// to go in the opposite direction that it is already travelling, then ignore this velocity change.
-		if (!this.isLastVelocityChangeComplete || this.head.getVelocity().isOppositeDirection(velocity)) {
+		var len = this.velocityChangeQueue.length,
+			lastVelocity = len ? this.velocityChangeQueue[len - 1] : this.head.getVelocity();
+
+		// Ignore new velocities that are in the opposite or same direction.  Trying to got in the opposite 
+		// direction is the same as trying to go backward, which is not allowed as the snake only moves forward.
+		// Trying to change the velocity in the same direction is redundant.
+		if (velocity.isOppositeDirection(lastVelocity) || velocity.isSameDirection(lastVelocity)) {
 			return this;
 		}
+
+		// Add the new velocity change to the queue.  The change will be applied before the head is moved in the next Snake.move() call.		
+		this.velocityChangeQueue.push(velocity);
 		
-		this.isLastVelocityChangeComplete = false;
-		
-		return this.head.setVelocity(velocity);
+		return this;
 	};
 	
 	/**
@@ -89,10 +95,12 @@ define([
 		// Move that piece to where the head is now.
 		tail.setPosition(new Position(this.head.getPosition()));
 		
-		// Move the head in whatever direction it should be going.
-		this.head.move();
+		// If there is a pending velocity change, apply it.
+		if (this.velocityChangeQueue.length) {
+			this.head.setVelocity(this.velocityChangeQueue.shift());
+		}
 		
-		this.isLastVelocityChangeComplete = true;
+		this.head.move();
 	};
 	
 	Snake.prototype.grow = function() {

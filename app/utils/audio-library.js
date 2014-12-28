@@ -1,7 +1,7 @@
 /**
  * Simple manager for audio tracks.  Supports HTML attribute configuration for each audio entry:
- *   loop: valueless but if set, the track will loop once it reaches the end.
- *   start-time: the time at which to start the track in seconds.  
+ *   data-loop: valueless but if set, the track will loop once it reaches the end.
+ *   data-start-time: the time at which to start the track in seconds.  
  */
 define([
 	"underscore",
@@ -17,12 +17,12 @@ define([
 	}
 	
 	function getStartTime(track) {
-		return $(track).attr("start-time") || 0;
+		return $(track).attr("data-start-time") || 0;
 	}
 	
 	AudioLibrary.prototype.init = function(selector) {
 		this.$tracks = this.$tracks.add($(selector || "audio").each(function(i, track) {
-			var hasLoop = typeof $(track).attr("loop") !== "undefined";
+			var hasLoop = typeof $(track).attr("data-loop") !== "undefined";
 			
 			// If this is Firefox, switch from mp3s to ogg.  Safari doesn't support ogg, so we can't just use 
 			// that format across the board.
