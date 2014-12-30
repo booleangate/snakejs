@@ -87,8 +87,8 @@ define([
 	};
 	
 	AudioLibrary.prototype.resume = function() {
-		// Nothing playing, do nothing.
-		if (this.currentTrack === false) {
+		// Nothing playing or isMuted, do nothing.
+		if (this.currentTrack === false || this.isMuted) {
 			return;
 		}
 		
